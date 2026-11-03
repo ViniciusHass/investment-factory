@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = C:\\Users\\vinic\\Documents\\codes\\investment-backend
+[submodule "frontend"]
+	path = frontend
+	url = C:\\Users\\vinic\\Documents\\codes\\investment-frontend

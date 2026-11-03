@@ -1,0 +1,4 @@
+# Phase 1 conservative defaults. Applies only when Codex trusts this project.
+# Model IDs deliberately omitted until verified in the local authenticated client.
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"

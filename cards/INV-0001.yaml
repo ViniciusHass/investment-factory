@@ -1,0 +1,12 @@
+id: INV-0001
+title: Define normalized market-data contract
+status: BACKLOG
+repository: investment-factory
+spec: specs/002-financial-data-providers/spec.md
+dependencies: []
+assignee_role: architect
+acceptance:
+  - Provider-independent schemas documented
+  - Missing and stale data states represented
+  - Provenance and timestamps mandatory
+  - Provider licensing and coverage questions recorded

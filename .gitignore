@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+*.sqlite3
+state/*
+!state/.gitkeep
+node_modules/
+dist/
