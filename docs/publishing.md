@@ -29,3 +29,7 @@ git push -u origin main
 4. On another machine, use `git clone --recurse-submodules <factory-url>`.
 5. Configure GitHub rulesets / branch protection and PR checks. **A sole repository owner may retain bypass capability depending on plan and rules**; verify enforcement. Keep automation tokens without merge/bypass permissions. No automated merges.
 6. If a remote is already configured, inspect `git remote -v` before repeating these commands.
+
+## Integration branches
+
+Backend and frontend each have a local `develop` branch. After their GitHub remotes are configured and the initial `main` branches are published, publish `develop` from each product repository and configure PR checks/protection for both `develop` and `main`. Implementation branches start from `develop` and their PRs target `develop`. Backend card merges require owner approval; Sol may merge frontend card PRs into frontend `develop` after CI and technical review. Both `develop → main` promotions require owner approval after MVP evaluation. Do not publish a submodule pointer to a commit that collaborators cannot fetch.

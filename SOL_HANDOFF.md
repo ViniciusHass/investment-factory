@@ -25,23 +25,23 @@ Goal: allocate contribution budget to reduce deviations from target hierarchy, t
 
 ## 5. Repositories and ownership
 - `investment-factory`: spec-first workflow, orchestration, cards, architectural decisions, contracts, agent instructions, execution history. This is the control plane, not the product API.
-- `investment-backend`: owner **personally creates the initial scaffolding** (FastAPI, Poetry, SQLAlchemy, Alembic, PostgreSQL). Sol can propose architecture and review; Luna implements only assigned cards afterward.
+- `investment-backend`: owner **personally creates the initial scaffolding** (FastAPI, uv, SQLAlchemy, Alembic, PostgreSQL). Sol can propose architecture and review; Luna implements only assigned cards afterward.
 - `investment-frontend`: user has limited React/frontend experience. **Sol must prepare a long-term, staged frontend plan before any Luna scaffolding or implementation.** Include learning-oriented rationale, chosen libraries, architecture, milestones, test approach, dependencies on backend contracts, UX, accessibility and maintenance strategy. Get explicit owner approval of plan. See `docs/frontend-roadmap.md`.
 - Factory includes backend and frontend as **Git submodules**. Bootstrap creates all three locally; remote GitHub repos are created manually and local submodule URLs replaced with GitHub URLs before publishing Factory.
 
 ## 6. Agents and operating mode
-Desired mode: **autonomous orchestration with human approval of merges**. Sol acts as architect/planner/reviewer; Luna agents implement backend/frontend cards. A Python Factory scheduler (future phase) persists state, checks dependencies, allocates worktrees, invokes agents, captures logs and tests, requests fixes, and opens PRs. User alone approves merges. No force push or bypass. Keep agent permissions narrow and secrets out of prompts and commits.
+Desired mode: **autonomous orchestration with scoped merge authority**. Sol acts as architect/planner/reviewer; Luna agents implement backend/frontend cards. A Python Factory scheduler (future phase) persists state, checks dependencies, allocates worktrees, invokes agents, captures logs and tests, requests fixes, and opens PRs. The owner approves backend card merges and both `develop → main` promotions after MVP evaluation. The owner delegates frontend card PR merges into frontend `develop` to Sol after CI and technical review. Luna never merges. No force push or bypass. Keep agent permissions narrow and secrets out of prompts and commits.
 
 Card lifecycle: BACKLOG → READY → RUNNING → TESTING → REVIEW → AWAITING_HUMAN_APPROVAL → DONE; failures retry with bounded attempts, then BLOCKED. Features can span multiple backend/frontend cards with explicit API contract dependencies. Each card requires objective acceptance criteria, test expectations, repo, dependencies and a Definition of Done. Keep distinct worktrees for concurrent agents; Git submodules do not provide concurrent isolation.
 
 **Important limitation:** Sol/Luna are intended agent roles/model selections, not proof that the user's local Codex CLI exposes those exact model identifiers or native programmatic delegation. Verify `codex --help`, authentication, model availability, Windows sandbox behavior and actual CLI/SDK capabilities. Do not hardcode unverified model IDs or claim full autonomy exists in Phase 1. Consider Codex CLI noninteractive runs initially, SDK/app-server later if supported and needed.
 
 ## 7. Spec Kit
-Use GitHub Spec Kit for constitution → specify → clarify → plan → tasks → analyze, adapted to locally installed CLI version. `.specify/` in this package is a project-specific seed, **not proof that official Spec Kit has been installed or initialized**. Verify current official setup and whether Codex is supported by the installed release. Do not blindly overwrite constitution or specs. Factory converts approved Spec Kit tasks into tracked cards; Spec Kit itself is not an agent scheduler.
+Use GitHub Spec Kit for constitution → specify → clarify → plan → tasks → analyze, adapted to locally installed CLI version. The original `.specify/` package was a project-specific seed; on 2026-11-03, `specify` 1.3.0 was initialized with its Codex integration and PowerShell scripts. Existing constitution and specs remained intact. Review generated assets before using a workflow on a feature. Factory converts approved Spec Kit tasks into tracked cards; Spec Kit itself is not an agent scheduler.
 
 ## 8. Architecture choices and quality gates
 - Frontend: React + TypeScript + Vite (planned), frontend library decisions by Sol roadmap.
-- Backend: FastAPI, SQLAlchemy, Alembic, PostgreSQL, Poetry; scoring/rebalancing isolated from provider I/O.
+- Backend: FastAPI, SQLAlchemy, Alembic, PostgreSQL, uv; scoring/rebalancing isolated from provider I/O.
 - Factory: Python 3.12+, Poetry, eventual SQLite state, Git CLI/worktrees, Codex integration.
 - Automated checks: lint/type checking, unit/integration tests, OpenAPI contract checks, PR review and human merge.
 - No market-data provider API secrets in frontend, repo or prompts. No trading/order execution in MVP.
