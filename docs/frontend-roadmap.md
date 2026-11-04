@@ -114,7 +114,7 @@ Faixas são estimativas de esforço, **não datas**; não incluem espera por con
 | Marco | Resultado | Pré-requisito | Esforço |
 |---|---|---|---|
 | M0 — especificações e contratos | decisões pendentes resolvidas; ADR e schemas aceitos | respostas do proprietário, pesquisa de provedores dos EUA, revisão do backend | 1–3 semanas |
-| M1 — fundação | Vite, TS, testes, i18n, tokens e shell responsivo | M0, card F01 aprovado; roadmap já aprovado | 1–2 semanas |
+| M1 — fundação | Vite, TS, testes, i18n, tokens e shell responsivo | roadmap aprovado, F01 aceito, Git/CI; contratos de M0 podem avançar em paralelo | 1–2 semanas |
 | M2 — metas | API tipada, visão geral e editor da árvore | contrato e endpoints de carteira | 2–4 semanas |
 | M3 — posições e ganho geral | CRUD, atual versus alvo e resumo investido versus atual | posição, valuation, FX e regra de ganho aprovada | 2–3 semanas |
 | M4 — scoring de ativos possuídos | proveniência, gates e score | adapters, regras e contrato | 2–4 semanas |
@@ -122,7 +122,7 @@ Faixas são estimativas de esforço, **não datas**; não incluem espera por con
 | M6 — histórico | snapshots e cenários acessíveis | persistência e premissas | 2–4 semanas |
 | M7 — descoberta | instrumentos não possuídos | decisão pós-MVP, cobertura/licença | a estimar |
 
-Fluxo principal: `M0 → M1 → M2 → M3 → M4 → M5 → M6`. Pesquisa de provedores pode seguir em paralelo à fundação. Telas não devem fingir que a API existe. Trabalho simultâneo em repositórios requer worktrees próprios.
+Fluxo principal: `M0 + M1 → M2 → M3 → M4 → M5 → M6`. O scaffold F01 pode ocorrer em paralelo à definição dos contratos de M0 após aceite do card; telas que consomem API aguardam contratos e backend reais. Pesquisa de provedores pode seguir em paralelo à fundação. Trabalho simultâneo em repositórios requer worktrees próprios.
 
 ## Cards propostos — BACKLOG
 
@@ -134,7 +134,7 @@ Os códigos são provisórios. Após Spec Kit `clarify → plan → tasks → an
 | C02 — mercado e qualidade | Factory / 002; evoluir INV-0001 | pesquisa de licença/cobertura dos EUA | IDs, unidades, FX, fonte, timestamps, ausente/antigo e exemplos validados; decisão de provedor gratuita documentada | 3–5 d |
 | C03 — score e aporte | Factory / 003, 004 | C01, C02, regras financeiras | estados e razões, snapshots, versões e limites documentados com cenários de contrato | 3–6 d |
 | C04 — contrato de ganho geral | Factory / 005 | C01, C02, política de FX e custo | fórmula com mesmo câmbio atual para investido e atual; ganho/perda/zero, moedas e qualidade documentados; exemplos validados | 2–4 d |
-| F01 — scaffold e gates | Frontend / plano aceito | M0, Git/proteções | app inicia; lint, teste, typecheck e build passam; README de execução; sem dado financeiro fictício em produção | 2–3 d |
+| F01 — scaffold e gates | Frontend / 006, card INV-0002 | roadmap aprovado, Git/proteções e card aceito; contratos de API não necessários nesta fatia | app inicia; lint, teste, typecheck e build passam; README de execução; sem dado financeiro fictício em produção | 2–3 d |
 | F02 — shell, UI e i18n | Frontend / 001 | F01 | rotas, layout móvel/desktop, pt-BR/en completos, troca de idioma e estados compartilhados; teclado/axe | 3–5 d |
 | F03 — cliente OpenAPI | Frontend / 001, 002 | F01, C01, C02, OpenAPI | tipos gerados, erros/abort/frescor, MSW de sucesso/falha e CI de divergência | 3–5 d |
 | F04 — metas e overview | Frontend / 001 | F02, F03, endpoint | árvore opcional; folha válida; soma !=100 vermelha e acessível bloqueia requisição; persistência e reabertura; teste de jornada | 5–8 d |
