@@ -28,6 +28,7 @@
 3. Criar planos e tarefas Spec Kit para contratos de carteira, mercado, ganho geral e rebalanceamento; executar análise de consistência. Converter somente tarefas aceitas em cards Factory com dependências, repositório e testes.
 4. Com o scaffold backend executável, obter OpenAPI e alinhar o contrato frontend. O frontend só começa após aprovação do roadmap e cards.
 5. Tornar os checks de CI executáveis quando houver manifests e scripts reais; o proprietário controla a promoção para `main`.
+6. Após estabilizar os manifests e checks, detalhar SemVer independente para backend e frontend em card próprio; sem tags automáticas antes da política de release aprovada.
 
 ## Decisões ainda solicitadas
 

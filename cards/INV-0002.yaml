@@ -25,6 +25,7 @@ test_commands:
   - npm run build
 definition_of_done:
   - Implemented in a worktree and branch created from frontend develop
+  - Subsequent implementation commits are atomic and authored by Codex
   - CI passes on a PR targeting frontend develop
   - Sol reviews the diff and test evidence
   - No merge until the applicable authority authorizes it

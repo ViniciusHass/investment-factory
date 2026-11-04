@@ -30,3 +30,5 @@ Read `SOL_HANDOFF.md`, `.specify/memory/constitution.md`, `docs/architecture.md`
 
 ## Code style
 - Write code comments in English, including comments in Dockerfiles and configuration files. User-facing text and project planning documents may use Portuguese or the supported UI languages.
+- In backend and frontend, make subsequent commits atomic: one coherent change per commit, with a Conventional Commit subject matching the existing repository style. Use the GitFlow branch path `develop` -> one work branch per card -> PR to `develop`. Agent-authored commits use `Codex <codex@users.noreply.github.com>` without changing the owner's global Git identity. Do not rewrite earlier published commits to retrofit this rule.
+- Plan SemVer separately for backend and frontend releases; do not create version tags or automate releases before the owner approves the release policy.

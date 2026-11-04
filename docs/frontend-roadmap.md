@@ -161,6 +161,8 @@ GitHub Actions será introduzido quando houver manifests e scripts executáveis.
 
 O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisição, como criar uma feature, como executar testes e como adicionar tradução. Componentes novos precisam de responsabilidade clara; evitar abstrações antes de haver uso concreto.
 
+Commits futuros de backend/frontend serão atômicos, em branches GitFlow por card, conforme ADR 0005. A adoção de SemVer para releases independentes será detalhada depois que manifests e CI estiverem estáveis; o roadmap não autoriza tags ou releases automáticas.
+
 ## Decisões ainda pendentes
 
 1. Como representar caixa e instrumentos que cabem em mais de uma categoria? Ramos omitidos têm ligação direta e soma de filhos decididas.

@@ -11,6 +11,7 @@ Backend e frontend são repositórios distintos e submódulos da Factory. O prop
 
 1. `main` representa uma versão aprovada. `develop` integra cards aceitos em cada repositório de produto.
 2. Cada card aprovado cria uma branch e um worktree próprios a partir da ponta atual de `develop`. Nome sugerido: `feat/INV-<id>-<resumo>` ou `fix/INV-<id>-<resumo>`. A branch não é criada no checkout compartilhado do submódulo.
+   Os próximos commits de backend/frontend serão atômicos e seguirão o padrão de mensagem existente; veja ADR 0005. Os commits já publicados não serão reescritos.
 3. Luna implementa e testa o card. Sol revisa spec, contrato, evidências e diferenças. O PR aponta para `develop` do mesmo repositório. CI precisa passar. No backend, o proprietário aprova o merge. No frontend, Sol pode autorizar e executar o merge do card após sua revisão técnica. Luna nunca faz merge.
 4. Mudanças de contrato que afetam backend e frontend usam cards dependentes e PRs separados. O Factory registra o vínculo e só atualiza ponteiros de submódulo para commits aceitos, em uma alteração própria.
 5. Ao completar o MVP, o proprietário executa testes manuais. Revisamos juntos o conjunto final de gates da pipeline. A promoção de `develop → main` em backend e frontend depende da autorização do proprietário; Sol não a executa autonomamente.
