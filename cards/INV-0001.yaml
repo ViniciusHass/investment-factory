@@ -10,3 +10,5 @@ acceptance:
   - Missing and stale data states represented
   - Provenance and timestamps mandatory
   - Provider licensing and coverage questions recorded
+  - Price and FX port response shapes are independent of providers
+  - Adapter substitution scenario and expected validation tests documented

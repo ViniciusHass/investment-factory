@@ -24,5 +24,11 @@ Read `SOL_HANDOFF.md`, `.specify/memory/constitution.md`, `docs/architecture.md`
 
 ## Security and Git
 - Three Git repos, backend/frontend referenced as Factory submodules. Use separate worktrees for concurrent agents; submodules alone do not isolate concurrent edits.
-- Never merge, force push, bypass protections, expose secrets or execute brokerage orders. Only user approves merges. Repository prompts are not a substitute for GitHub enforcement.
+- Never force push, bypass protections, expose secrets or execute brokerage orders. Backend PR merges into `develop` and any `develop` to `main` merge require owner approval. The owner explicitly delegates to Sol authorization and execution of frontend card PR merges into frontend `develop`, after passing CI and Sol technical review. Luna never merges. Repository prompts are not a substitute for GitHub enforcement.
 - No implementation without accepted specs/cards, contracts and test expectations. Keep ADRs in `docs/decisions/`.
+- Backend and frontend use `develop` as the integration branch. Each approved implementation starts from `develop` in its own branch and worktree and targets a PR to `develop`. Backend card merges require owner approval; Sol may merge frontend card PRs into frontend `develop` only after CI and technical review. The owner alone approves promotion from `develop` to `main` in both repos after MVP evaluation.
+
+## Code style
+- Write code comments in English, including comments in Dockerfiles and configuration files. User-facing text and project planning documents may use Portuguese or the supported UI languages.
+- In backend and frontend, make subsequent commits atomic: one coherent change per commit, with a Conventional Commit subject matching the existing repository style. Use the GitFlow branch path `develop` -> one work branch per card -> PR to `develop`. Agent-authored commits use `Codex <codex@users.noreply.github.com>` without changing the owner's global Git identity. Do not rewrite earlier published commits to retrofit this rule.
+- Plan SemVer separately for backend and frontend releases; do not create version tags or automate releases before the owner approves the release policy.
