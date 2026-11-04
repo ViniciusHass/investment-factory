@@ -6,20 +6,20 @@
 
 | Área | Evidência | Gate seguinte |
 |---|---|---|
-| Três repositórios | Factory, backend e frontend foram publicados como repositórios públicos em `ViniciusHass`. Backend/frontend têm `main` e `develop` remotos; URLs dos submódulos apontam para GitHub. | Configurar e verificar proteção de `develop`/`main` antes de trabalho de agentes. |
+| Três repositórios | Factory, backend e frontend foram publicados como repositórios públicos em `ViniciusHass`. Backend/frontend têm `main` e `develop` remotos; URLs dos submódulos apontam para GitHub. Factory protege `main`; produtos protegem `main` e `develop`. | Finalizar contratos, cards e testes antes de trabalho de implementação. |
 | Backend do proprietário | Repositório irmão contém árvore `src/api`, `src/domain`, `src/aplication`, `src/infrastruct` e `tests`. `src/main.py` contém apenas um comentário. Não foram encontrados `pyproject.toml`, `uv.lock`, modelos, migrações ou OpenAPI. Alguns arquivos chamados `__init__,py` têm vírgula antes de `py`, e `aplication`/`infrastruct` podem ser nomes provisórios. | Proprietário confirma ou conclui o scaffold; Sol revisa contratos e organização sem sobrescrever o trabalho dele. O Dockerfile da API aguarda `pyproject.toml`, `uv.lock` e `src.main:app`. |
-| Frontend | Ainda sem scaffold React/Vite; roadmap e ADR de stack em revisão. | Aprovação explícita do roadmap, specs/cards e contratos antes de F01 ou delegação. |
+| Frontend | Ainda sem scaffold React/Vite; roadmap aprovado em 2026-11-04. | Specs/cards e contratos devem ser aceitos antes de F01 ou delegação. |
 | Spec Kit | `specify` 1.3.0 inicializado na Factory com integração Codex e scripts PowerShell. A constituição e os specs anteriores ficaram intactos; `specify check` passou. | Clarificar specs, produzir planos e tarefas e analisá-los antes de converter tarefas aceitas em cards READY. |
 | Execução de agentes | `specify check` informou VS Code disponível, mas não encontrou Codex CLI. | Validar CLI/autenticação/modelos e Windows antes de prometer orquestração automática. A integração de skills instalada não prova execução automática. |
 | Dados de mercado | Pesquisa inicial de fontes gratuitas para ações/ETFs dos EUA e ADR de ports/adapters concluídos como propostas. | Verificar licença, limites e amostras de API; escolher fonte, política de frescor, fallback e custo antes do adapter. |
-| CI | ADR de branches e gates preparado; remotes GitHub publicados, mas sem manifestos executáveis no backend/frontend. | Configurar proteção de PR agora; criar workflows de testes por repositório após manifests e scripts reais; finalizar gates de integração com o proprietário após testar o MVP. |
+| CI | Workflows de testes estão em PRs de rascunho; backend e frontend exigem check `tests` em `main` e `develop`. Os checks falham porque os manifests ainda não existem. | Concluir manifests e testes, revisar workflows e deixar CI verde; finalizar gates de integração com o proprietário após testar o MVP. |
 
 ## Autoridade de merge confirmada
 
 - Backend: cada PR de card para `develop` depende de aprovação do proprietário.
 - Frontend: Sol pode autorizar e executar merge de PR de card para `develop` após CI e revisão técnica. Luna não faz merge.
 - Ambos: promoção `develop → main` depende da avaliação do MVP e aprovação do proprietário.
-- Nenhuma autoridade de merge dispensa regras de proteção no GitHub. Branches remotas foram publicadas; regras de proteção e checks ainda precisam de confirmação.
+- Nenhuma autoridade de merge dispensa regras de proteção no GitHub. As regras estão ativas; o check `tests` obrigatório bloqueia integração enquanto o scaffold não estiver executável.
 
 ## Próxima sequência de trabalho arquitetural
 
@@ -27,7 +27,7 @@
 2. Completar a clarificação dos specs 001 e 005 sobre caixa, entradas sem histórico, resgates, proventos e precisão. Preservar valores originais e usar USD como consolidação inicial.
 3. Criar planos e tarefas Spec Kit para contratos de carteira, mercado, ganho geral e rebalanceamento; executar análise de consistência. Converter somente tarefas aceitas em cards Factory com dependências, repositório e testes.
 4. Com o scaffold backend executável, obter OpenAPI e alinhar o contrato frontend. O frontend só começa após aprovação do roadmap e cards.
-5. Configurar regras de branch antes de execução autônoma. Adicionar checks de CI quando houver manifests e scripts reais; o proprietário controla a promoção para `main`.
+5. Tornar os checks de CI executáveis quando houver manifests e scripts reais; o proprietário controla a promoção para `main`.
 
 ## Decisões ainda solicitadas
 

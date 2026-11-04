@@ -1,18 +1,18 @@
 # Roadmap de longo prazo do frontend
 
-**Estado:** proposta para revisão, 2026-11-03. **Arquiteto:** Sol. **Implementação:** Luna, apenas após aprovação explícita do proprietário e dos cards. **Repositório de execução:** `investment-frontend`.
+**Estado:** roadmap aprovado pelo proprietário em 2026-11-04; cards, contratos e regras financeiras ainda exigem aceite próprio. **Arquiteto:** Sol. **Implementação:** Luna, apenas após cards prontos e aprovados. **Repositório de execução:** `investment-frontend`.
 
 ## Objetivo e limites
 
 O produto é um planejador pessoal de carteira. A interface registra posições e metas, apresenta dados e elegibilidade de instrumentos, simula aportes e compara planejado com realizado. Não executa ordens nem promete retornos. FastAPI é a fonte autoritativa de cálculos, pontuação, conversão cambial e qualidade de dados; React pode calcular prévias de formulário, mas o servidor revalida tudo.
 
-Este documento descreve apenas um **plano proposto**. Nenhum scaffolding ou card de implementação fica liberado até revisão do proprietário, especificação aceita, contrato aplicável e testes esperados. Cada PR será revisado por Sol. O proprietário aprova merges de cards do backend; Sol pode autorizar e executar merges de cards do frontend para `develop` após CI e revisão técnica. A promoção de ambos os repositórios para `main` depende do proprietário.
+Este documento registra o **plano aprovado**. O aceite do roadmap não libera automaticamente o scaffolding ou outro card: cada execução exige dependências resolvidas, especificação aceita, contrato aplicável e testes esperados. Cada PR será revisado por Sol. O proprietário aprova merges de cards do backend; Sol pode autorizar e executar merges de cards do frontend para `develop` após CI e revisão técnica. A promoção de ambos os repositórios para `main` depende do proprietário.
 
 ## Estrutura encontrada
 
 | Área | Estado em 2026-11-03 | Implicação |
 |---|---|---|
-| Factory | Três repositórios foram publicados em `ViniciusHass`; os dois submódulos usam URLs GitHub. A branch `main` da Factory aponta para o scaffold backend publicado. | Proteção de branches e checks ainda pendentes antes de agentes abrirem PRs |
+| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `tests` obrigatório. | Workflows de produto falham até existirem manifestos e testes executáveis; contratos e cards ainda pendentes |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
 | Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
@@ -114,7 +114,7 @@ Faixas são estimativas de esforço, **não datas**; não incluem espera por con
 | Marco | Resultado | Pré-requisito | Esforço |
 |---|---|---|---|
 | M0 — especificações e contratos | decisões pendentes resolvidas; ADR e schemas aceitos | respostas do proprietário, pesquisa de provedores dos EUA, revisão do backend | 1–3 semanas |
-| M1 — fundação | Vite, TS, testes, i18n, tokens e shell responsivo | plano aprovado, M0 | 1–2 semanas |
+| M1 — fundação | Vite, TS, testes, i18n, tokens e shell responsivo | M0, card F01 aprovado; roadmap já aprovado | 1–2 semanas |
 | M2 — metas | API tipada, visão geral e editor da árvore | contrato e endpoints de carteira | 2–4 semanas |
 | M3 — posições e ganho geral | CRUD, atual versus alvo e resumo investido versus atual | posição, valuation, FX e regra de ganho aprovada | 2–3 semanas |
 | M4 — scoring de ativos possuídos | proveniência, gates e score | adapters, regras e contrato | 2–4 semanas |
@@ -169,7 +169,7 @@ O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisiçã
 4. Quais scorecards, gates e pesos por classe/setor? Dados insuficientes não são score zero.
 5. O realizado será registrado por compra individual. Ainda é preciso definir frações, taxas, impostos, dividendos e caixa residual.
 6. Quais horizonte e premissas de cenários? Não calcular retorno hipotético sem escolha explícita.
-7. Remotes GitHub e URLs dos submódulos estão configurados. Ainda falta verificar proteção de branches e checks de CI.
+7. Remotes, URLs dos submódulos e proteção de branches estão configurados. Os checks de CI são obrigatórios, mas não passam antes dos manifests e testes do backend/frontend.
 
 ## Próximo passo
 

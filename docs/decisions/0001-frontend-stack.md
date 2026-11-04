@@ -1,7 +1,7 @@
 # ADR 0001 — Stack do frontend
 
 **Data:** 2026-11-03
-**Estado:** proposta; requer aprovação do proprietário antes do scaffolding.
+**Estado:** direção aprovada com o roadmap em 2026-11-04; versões exatas e contratos ainda dependem dos cards.
 
 ## Contexto
 

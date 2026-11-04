@@ -2,7 +2,7 @@
 
 Bootstrap creates three **local** repositories. It does not create GitHub repositories or grant agents permissions.
 
-1. Create three **empty private** GitHub repositories named `investment-backend`, `investment-frontend`, and `investment-factory` (no initial README/license). Replace `<OWNER>` below with your GitHub username/organization.
+1. Create three **empty public** GitHub repositories named `investment-backend`, `investment-frontend`, and `investment-factory` (no initial README/license). They were created under `ViniciusHass` on 2026-11-03; the commands below remain a reference for a fresh bootstrap.
 2. Push the backend and frontend first:
 
 ```powershell
