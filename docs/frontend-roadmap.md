@@ -157,7 +157,7 @@ Os códigos são provisórios. Após Spec Kit `clarify → plan → tasks → an
 - E2E: Playwright para cadastrar meta, posição, simular aporte e registrar realizado, quando APIs existirem.
 - Gates de PR: lint, typecheck, testes e build; E2E para fluxos integrados. Conferir bundle e dependências a cada milestone.
 
-GitHub Actions será introduzido quando houver manifests e scripts executáveis. Primeiro automatiza gates por PR em `develop`; após o teste manual do MVP pelo proprietário, revisamos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
+GitHub Actions já tem um check inicial `foundation` para validar a estrutura do repositório. Enquanto `package.json` e o lockfile não existirem, ele informa que instalação, lint, typecheck e build estão pendentes; não executa nem afirma ter executado testes. Quando F01 implementar o primeiro teste significativo, o mesmo card deve reativar `npm run test -- --run` no workflow e provar falha controlada antes de seu PR ser considerado concluído. No backend, o primeiro card com testes reais deverá reativar `uv run pytest tests` após o proprietário concluir o manifesto uv. Depois do teste manual do MVP, revisaremos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
 
 O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisição, como criar uma feature, como executar testes e como adicionar tradução. Componentes novos precisam de responsabilidade clara; evitar abstrações antes de haver uso concreto.
 
