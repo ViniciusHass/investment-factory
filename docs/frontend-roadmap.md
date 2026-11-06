@@ -12,7 +12,7 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 
 | Área | Estado em 2026-11-03 | Implicação |
 |---|---|---|
-| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap passaram no check de estrutura; testes serão reativados com os primeiros testes reais. Contratos e cards ainda estão pendentes. |
+| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap foram integrados em `develop`; testes serão reativados com os primeiros testes reais. Contratos de produto ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
 | Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
@@ -171,7 +171,7 @@ Commits futuros de backend/frontend serão atômicos, em branches GitFlow por ca
 4. Quais scorecards, gates e pesos por classe/setor? Dados insuficientes não são score zero.
 5. O realizado será registrado por compra individual. Ainda é preciso definir frações, taxas, impostos, dividendos e caixa residual.
 6. Quais horizonte e premissas de cenários? Não calcular retorno hipotético sem escolha explícita.
-7. Remotes, URLs dos submódulos e proteção de branches estão configurados. Os checks de CI são obrigatórios, mas não passam antes dos manifests e testes do backend/frontend.
+7. Remotes, URLs dos submódulos e proteção de branches estão configurados. O check `foundation` passa; testes de produto serão exigidos quando os primeiros testes reais forem implementados.
 
 ## Próximo passo
 
