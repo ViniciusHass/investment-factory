@@ -1,9 +1,11 @@
 id: INV-0002
 title: Scaffold the approved React frontend with quality gates
-status: BACKLOG
+status: RUNNING
 repository: investment-frontend
 spec: specs/006-frontend-foundation/spec.md
 roadmap: docs/frontend-roadmap.md
+plan: specs/006-frontend-foundation/plan.md
+tasks: specs/006-frontend-foundation/tasks.md
 decision: docs/decisions/0001-frontend-stack.md
 assignee_role: implementer
 estimate: 2-3 working days
@@ -11,6 +13,7 @@ dependencies:
   - Owner accepts this card and its test expectations
   - Protected develop and main branches remain active
   - Frontend CI workflow is included in the implementation PR and passes
+  - First meaningful test is added and the workflow test step is re-enabled before acceptance
 acceptance:
   - Vite, React and TypeScript strict mode start locally from a documented command
   - No portfolio data or financial-provider credentials are bundled into the app

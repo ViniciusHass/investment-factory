@@ -1,7 +1,7 @@
 # ADR 0003 — Branches de implementação e CI
 
 **Data:** 2026-11-03
-**Estado:** fluxo e autoridades de merge confirmados pelo proprietário. Os três repositórios são públicos no GitHub. Factory protege `main`; backend/frontend protegem `main` e `develop`, com PR, bloqueio de force push/exclusão e check `tests` do GitHub Actions obrigatório. A conta do proprietário é a única exceção de bypass configurada.
+**Estado:** fluxo e autoridades de merge confirmados pelo proprietário. Os três repositórios são públicos no GitHub. Factory protege `main`; backend/frontend protegem `main` e `develop`, com PR, check `foundation` obrigatório e bloqueio de force push/exclusão. A conta do proprietário é a única exceção de bypass configurada.
 
 ## Contexto
 
@@ -21,7 +21,7 @@ Backend e frontend são repositórios distintos e submódulos da Factory. O prop
 - **Quando houver manifests executáveis:** workflow por repositório em PR para `develop` e push em `develop`. Backend com uv/lockfile, lint, typecheck e testes; frontend com instalação pelo lockfile, lint, typecheck, testes e build. Não bloquear o scaffold atual com comandos que ainda não existem.
 - **Quando houver contratos FastAPI:** checar OpenAPI, geração de tipos e testes de contrato. Dados financeiros externos são simulados nos testes; credenciais de provedores não são necessárias para PRs.
 - **Antes da integração final do MVP:** acrescentar ou ajustar testes de integração/E2E com banco de teste, revisar tempo de execução e proteção de branches com o proprietário. O teste manual do proprietário é um gate separado e explícito.
-- Workflows de backend e frontend foram publicados em branches `chore/setup-ci` e PRs em rascunho. Ambos falham enquanto não existem manifests e testes executáveis. O check `tests` já é obrigatório nas regras de produto; nenhum workflow recebe permissão para fazer merge ou bypass.
+- Workflows de backend e frontend foram integrados a `develop` pelos PRs #1. O job inicial `foundation` valida arquivos essenciais e passa sem manifests, deixando explícitos os checks adiados. Quando os manifests aparecem, instala dependências e executa os checks de código disponíveis; nenhum teste é declarado como executado antes de existir. O primeiro card com testes reais reativa a etapa de testes. Nenhum workflow recebe permissão para fazer merge ou bypass.
 
 ## Critérios de aceite para cards de CI
 

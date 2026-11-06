@@ -12,14 +12,14 @@
 | Spec Kit | `specify` 1.3.0 inicializado na Factory com integração Codex e scripts PowerShell. A constituição e os specs anteriores ficaram intactos; `specify check` passou. | Clarificar specs, produzir planos e tarefas e analisá-los antes de converter tarefas aceitas em cards READY. |
 | Execução de agentes | `specify check` informou VS Code disponível, mas não encontrou Codex CLI. | Validar CLI/autenticação/modelos e Windows antes de prometer orquestração automática. A integração de skills instalada não prova execução automática. |
 | Dados de mercado | Pesquisa inicial de fontes gratuitas para ações/ETFs dos EUA e ADR de ports/adapters concluídos como propostas. | Verificar licença, limites e amostras de API; escolher fonte, política de frescor, fallback e custo antes do adapter. |
-| CI | Workflows de testes estão em PRs de rascunho; backend e frontend exigem check `tests` em `main` e `develop`. Os checks falham porque os manifests ainda não existem. | Concluir manifests e testes, revisar workflows e deixar CI verde; finalizar gates de integração com o proprietário após testar o MVP. |
+| CI | PRs #1 e #2 de backend e frontend foram integrados a `develop`. O job `foundation` passou e é obrigatório em `main` e `develop`. | Reativar etapas de testes assim que existirem os primeiros testes reais e então revisar gates de integração com o proprietário. |
 
 ## Autoridade de merge confirmada
 
 - Backend: cada PR de card para `develop` depende de aprovação do proprietário.
 - Frontend: Sol pode autorizar e executar merge de PR de card para `develop` após CI e revisão técnica. Luna não faz merge.
 - Ambos: promoção `develop → main` depende da avaliação do MVP e aprovação do proprietário.
-- Nenhuma autoridade de merge dispensa regras de proteção no GitHub. As regras estão ativas; o check `tests` obrigatório bloqueia integração enquanto o scaffold não estiver executável.
+- Nenhuma autoridade de merge dispensa regras de proteção no GitHub. As regras estão ativas, com `foundation` como check obrigatório; novos PRs seguem a autoridade de merge definida acima.
 
 ## Próxima sequência de trabalho arquitetural
 

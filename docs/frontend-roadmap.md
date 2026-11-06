@@ -12,7 +12,7 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 
 | Área | Estado em 2026-11-03 | Implicação |
 |---|---|---|
-| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `tests` obrigatório. | Workflows de produto falham até existirem manifestos e testes executáveis; contratos e cards ainda pendentes |
+| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap foram integrados em `develop`; testes serão reativados com os primeiros testes reais. Contratos de produto ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
 | Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
@@ -157,7 +157,7 @@ Os códigos são provisórios. Após Spec Kit `clarify → plan → tasks → an
 - E2E: Playwright para cadastrar meta, posição, simular aporte e registrar realizado, quando APIs existirem.
 - Gates de PR: lint, typecheck, testes e build; E2E para fluxos integrados. Conferir bundle e dependências a cada milestone.
 
-GitHub Actions será introduzido quando houver manifests e scripts executáveis. Primeiro automatiza gates por PR em `develop`; após o teste manual do MVP pelo proprietário, revisamos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
+GitHub Actions já tem um check inicial `foundation` para validar a estrutura do repositório. Enquanto `package.json` e o lockfile não existirem, ele informa que instalação, lint, typecheck e build estão pendentes; não executa nem afirma ter executado testes. Quando F01 implementar o primeiro teste significativo, o mesmo card deve reativar `npm run test -- --run` no workflow e provar falha controlada antes de seu PR ser considerado concluído. No backend, o primeiro card com testes reais deverá reativar `uv run pytest tests` após o proprietário concluir o manifesto uv. Depois do teste manual do MVP, revisaremos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
 
 O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisição, como criar uma feature, como executar testes e como adicionar tradução. Componentes novos precisam de responsabilidade clara; evitar abstrações antes de haver uso concreto.
 
@@ -171,7 +171,7 @@ Commits futuros de backend/frontend serão atômicos, em branches GitFlow por ca
 4. Quais scorecards, gates e pesos por classe/setor? Dados insuficientes não são score zero.
 5. O realizado será registrado por compra individual. Ainda é preciso definir frações, taxas, impostos, dividendos e caixa residual.
 6. Quais horizonte e premissas de cenários? Não calcular retorno hipotético sem escolha explícita.
-7. Remotes, URLs dos submódulos e proteção de branches estão configurados. Os checks de CI são obrigatórios, mas não passam antes dos manifests e testes do backend/frontend.
+7. Remotes, URLs dos submódulos e proteção de branches estão configurados. O check `foundation` passa; testes de produto serão exigidos quando os primeiros testes reais forem implementados.
 
 ## Próximo passo
 
