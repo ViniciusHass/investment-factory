@@ -1,9 +1,11 @@
 id: INV-0002
 title: Scaffold the approved React frontend with quality gates
-status: BACKLOG
+status: READY
 repository: investment-frontend
 spec: specs/006-frontend-foundation/spec.md
 roadmap: docs/frontend-roadmap.md
+plan: specs/006-frontend-foundation/plan.md
+tasks: specs/006-frontend-foundation/tasks.md
 decision: docs/decisions/0001-frontend-stack.md
 assignee_role: implementer
 estimate: 2-3 working days
