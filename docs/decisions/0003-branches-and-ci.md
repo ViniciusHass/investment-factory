@@ -1,7 +1,7 @@
 # ADR 0003 — Branches de implementação e CI
 
 **Data:** 2026-11-03
-**Estado:** fluxo e autoridades de merge confirmados pelo proprietário. Os três repositórios são públicos no GitHub. Factory protege `main`; backend/frontend protegem `main` e `develop`, com PR e bloqueio de force push/exclusão. A troca do check obrigatório `tests` para `foundation` está em andamento após a correção dos workflows; a conta do proprietário é a única exceção de bypass configurada.
+**Estado:** fluxo e autoridades de merge confirmados pelo proprietário. Os três repositórios são públicos no GitHub. Factory protege `main`; backend/frontend protegem `main` e `develop`, com PR, check `foundation` obrigatório e bloqueio de force push/exclusão. A conta do proprietário é a única exceção de bypass configurada.
 
 ## Contexto
 

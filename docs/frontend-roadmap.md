@@ -12,7 +12,7 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 
 | Área | Estado em 2026-11-03 | Implicação |
 |---|---|---|
-| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `tests` obrigatório. | Workflows de produto falham até existirem manifestos e testes executáveis; contratos e cards ainda pendentes |
+| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap passaram no check de estrutura; testes serão reativados com os primeiros testes reais. Contratos e cards ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
 | Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
