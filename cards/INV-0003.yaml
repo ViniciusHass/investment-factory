@@ -1,0 +1,31 @@
+id: INV-0003
+title: Responsive frontend shell and pt-BR/en localization
+status: READY
+repository: investment-frontend
+spec: specs/007-frontend-shell-i18n/spec.md
+plan: specs/007-frontend-shell-i18n/plan.md
+tasks: specs/007-frontend-shell-i18n/tasks.md
+depends_on:
+  - INV-0002
+blockers: []
+acceptance:
+  - Responsive semantic shell and keyboard navigation at desktop and 320px
+  - Active home and localized not-found recovery routes without fictional financial pages
+  - Complete pt-BR and en catalogs, immediate switch, document language and title updates
+  - Safe fallback when browser preference storage fails or contains unsupported locale
+  - Five translated and accessible shared feedback states with keyboard retry
+  - Vitest, Playwright/axe, lint, typecheck and build pass locally and in CI
+  - No FastAPI/provider request, secret or invented portfolio value
+test_commands:
+  - npm ci
+  - npm run lint
+  - npm run typecheck
+  - npm run test -- --run
+  - npm run test:e2e
+  - npm run build
+definition_of_done:
+  - Implemented by Luna in isolated worktree from frontend develop
+  - Atomic Conventional Commits authored by Codex
+  - PR targets frontend develop and links spec/card with test evidence
+  - Sol technical review and green required CI before Sol merge
+  - No promotion to main before owner validates MVP
