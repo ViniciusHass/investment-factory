@@ -10,11 +10,11 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 
 ## Estrutura encontrada
 
-| Área | Estado em 2026-11-03 | Implicação |
+| Área | Estado atualizado em 2026-11-07 | Implicação |
 |---|---|---|
 | Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap foram integrados em `develop`; testes serão reativados com os primeiros testes reais. Contratos de produto ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
-| Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
+| Frontend | F01 / INV-0002 integrado em `develop` pelo PR #3: React/Vite, TypeScript estrito, teste e build; `main` aguarda avaliação do MVP | Próximas funcionalidades exigem cards aceitos e contratos apropriados |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
 | Contratos | Apenas README em `contracts/` | Tipos gerados e integração aguardam OpenAPI versionado |
 
@@ -157,7 +157,7 @@ Os códigos são provisórios. Após Spec Kit `clarify → plan → tasks → an
 - E2E: Playwright para cadastrar meta, posição, simular aporte e registrar realizado, quando APIs existirem.
 - Gates de PR: lint, typecheck, testes e build; E2E para fluxos integrados. Conferir bundle e dependências a cada milestone.
 
-GitHub Actions já tem um check inicial `foundation` para validar a estrutura do repositório. Enquanto `package.json` e o lockfile não existirem, ele informa que instalação, lint, typecheck e build estão pendentes; não executa nem afirma ter executado testes. Quando F01 implementar o primeiro teste significativo, o mesmo card deve reativar `npm run test -- --run` no workflow e provar falha controlada antes de seu PR ser considerado concluído. No backend, o primeiro card com testes reais deverá reativar `uv run pytest tests` após o proprietário concluir o manifesto uv. Depois do teste manual do MVP, revisaremos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
+GitHub Actions tem o check obrigatório `foundation`. F01 adicionou o primeiro teste significativo e reativou `npm run test -- --run`: uma falha controlada bloqueou o PR #3, e a correção posterior passou por instalação, lint, typecheck, teste e build. No backend, o primeiro card com testes reais deverá reativar `uv run pytest tests` após o proprietário concluir o manifesto uv. Depois do teste manual do MVP, revisaremos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
 
 O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisição, como criar uma feature, como executar testes e como adicionar tradução. Componentes novos precisam de responsabilidade clara; evitar abstrações antes de haver uso concreto.
 
@@ -175,4 +175,4 @@ Commits futuros de backend/frontend serão atômicos, em branches GitFlow por ca
 
 ## Próximo passo
 
-Revisar este roadmap e o ADR com o proprietário. Aplicar Spec Kit 1.3.0 aos artefatos existentes sem sobrescrever a constituição: constituição → especificações → clarificações → planos → tarefas → análise. Converter tarefas aceitas em cards Factory e versionar contratos. Só então liberar F01 para Luna.
+F01 está concluído em frontend `develop`. Prosseguir com Spec Kit 1.3.0 nos contratos e specs pendentes, sem sobrescrever a constituição: especificações → clarificações → planos → tarefas → análise. Converter tarefas aceitas em cards Factory antes de liberar F02 e os recursos que consomem FastAPI.

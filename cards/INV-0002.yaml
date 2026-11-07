@@ -1,6 +1,6 @@
 id: INV-0002
 title: Scaffold the approved React frontend with quality gates
-status: RUNNING
+status: DONE
 repository: investment-frontend
 spec: specs/006-frontend-foundation/spec.md
 roadmap: docs/frontend-roadmap.md
