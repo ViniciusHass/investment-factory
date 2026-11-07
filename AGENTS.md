@@ -24,9 +24,10 @@ Read `SOL_HANDOFF.md`, `.specify/memory/constitution.md`, `docs/architecture.md`
 
 ## Security and Git
 - Three Git repos, backend/frontend referenced as Factory submodules. Use separate worktrees for concurrent agents; submodules alone do not isolate concurrent edits.
-- Never force push, bypass protections, expose secrets or execute brokerage orders. Backend PR merges into `develop` and any `develop` to `main` merge require owner approval. The owner explicitly delegates to Sol authorization and execution of frontend card PR merges into frontend `develop`, after passing CI and Sol technical review. Luna never merges. Repository prompts are not a substitute for GitHub enforcement.
+- Never bypass protections, expose secrets or execute brokerage orders. After a rebase, the owner permits `--force-with-lease` on the unprotected work branch only; never force push protected branches. Backend PR merges into `develop` and any `develop` to `main` merge require owner approval. The owner explicitly delegates to Sol authorization and execution of frontend card PR merges into frontend `develop`, after passing CI and Sol technical review. Luna never merges. Repository prompts are not a substitute for GitHub enforcement.
 - No implementation without accepted specs/cards, contracts and test expectations. Keep ADRs in `docs/decisions/`.
 - Backend and frontend use `develop` as the integration branch. Each approved implementation starts from `develop` in its own branch and worktree and targets a PR to `develop`. Backend card merges require owner approval; Sol may merge frontend card PRs into frontend `develop` only after CI and technical review. The owner alone approves promotion from `develop` to `main` in both repos after MVP evaluation.
+- On 2026-11-07, the owner authorized Sol to proceed through all frontend roadmap cards. Sol must still complete Spec Kit artifacts, objective criteria and test expectations before delegating each card to Luna; ask the owner about unresolved product choices. Sol informs the owner of backend PRs for review and does not merge them.
 
 ## Code style
 - Write code comments in English, including comments in Dockerfiles and configuration files. User-facing text and project planning documents may use Portuguese or the supported UI languages.
