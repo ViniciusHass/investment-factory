@@ -1,6 +1,6 @@
 id: INV-0003
 title: Responsive frontend shell and pt-BR/en localization
-status: READY
+status: RUNNING
 repository: investment-frontend
 spec: specs/007-frontend-shell-i18n/spec.md
 plan: specs/007-frontend-shell-i18n/plan.md
