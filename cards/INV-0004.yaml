@@ -1,0 +1,23 @@
+id: INV-0004
+title: Maintain frontend test dependencies after inherited audit findings
+status: BACKLOG
+repository: investment-frontend
+spec: specs/006-frontend-foundation/spec.md
+depends_on:
+  - INV-0003
+blockers:
+  - Refine foundation plan and tasks for maintenance and run Spec Kit analysis
+acceptance:
+  - Remove identified critical test-tool advisories with compatible locked dependencies
+  - Preserve F02 behavior and documented development commands
+  - Report full and production-only audits and explain remaining advisories
+  - Sol review and green required CI on a PR to frontend develop
+test_commands:
+  - npm ci
+  - npm run lint
+  - npm run typecheck
+  - npm run test -- --run
+  - npm run test:e2e
+  - npm run build
+  - npm audit --json
+  - npm audit --omit=dev --json

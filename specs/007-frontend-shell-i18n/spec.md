@@ -1,8 +1,8 @@
 # Feature Specification: Frontend Shell and Languages
 
-**Feature Branch**: To be created from `investment-frontend/develop` after the Factory card is ready
+**Feature Branch**: `feat/inv-0003-shell-i18n`; integrated into frontend `develop` by PR #4 on 2026-11-08
 **Created**: 2026-11-07
-**Status**: Accepted under the owner's 2026-11-07 authorization to proceed through the frontend roadmap
+**Status**: Implemented and verified on 2026-11-08 under the owner's 2026-11-07 frontend authorization; see card INV-0003 for evidence
 **Input**: Approved frontend roadmap F02: responsive shell, routes, shared UI states, complete pt-BR/en text, accessible language switch, keyboard and axe checks. This feature follows completed INV-0002.
 
 ## User Scenarios & Testing
