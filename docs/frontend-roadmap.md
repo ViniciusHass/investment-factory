@@ -14,9 +14,9 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 |---|---|---|
 | Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap foram integrados em `develop`; testes serão reativados com os primeiros testes reais. Contratos de produto ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
-| Frontend | F01 / INV-0002 integrado em `develop` pelo PR #3: React/Vite, TypeScript estrito, teste e build; `main` aguarda avaliação do MVP | Próximas funcionalidades exigem cards aceitos e contratos apropriados |
+| Frontend | F01 e F02 integrados em frontend `develop` pelos PRs #3/#4; shell, pt-BR/en e testes Chromium/axe estão presentes | F03 usa contratos versionados; main aguarda MVP e autorização |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
-| Contratos | Apenas README em `contracts/` | Tipos gerados e integração aguardam OpenAPI versionado |
+| Contratos | OpenAPI C01 versionado em `contracts/portfolio/v1/`, com schemas e fixtures verificados em 2026-11-08 | Implementação/export OpenAPI backend e integração real são cards distintos |
 
 ## Decisões do proprietário
 
@@ -176,3 +176,7 @@ Commits futuros de backend/frontend serão atômicos, em branches GitFlow por ca
 ## Próximo passo
 
 F01 está concluído em frontend `develop`. Prosseguir com Spec Kit 1.3.0 nos contratos e specs pendentes, sem sobrescrever a constituição: especificações → clarificações → planos → tarefas → análise. Converter tarefas aceitas em cards Factory antes de liberar F02 e os recursos que consomem FastAPI.
+
+## Contrato C01 e entrada de aporte — 2026-11-08
+
+O proprietário confirmou o scaffold pronto e atribuiu a Sol o contrato técnico. O MVP começa com caixa zero e permite cadastrar posições existentes e informar quanto investir. O botão “Calcular investimento” retorna investimentos, quantidades, custos estimados e saldo, sem executar ou registrar compras. Ver [C01](../contracts/portfolio/v1/README.md). Whole/fractional-unit policy é uma pergunta de negócio pendente; nenhuma política foi inferida a partir do schema decimal. Endpoints ainda dependem de implementação backend, não da definição de contrato pelo proprietário.

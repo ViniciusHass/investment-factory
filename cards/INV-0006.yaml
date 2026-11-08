@@ -1,0 +1,18 @@
+id: INV-0006
+title: Implement core C01 API on the accepted backend scaffold
+status: BACKLOG
+repository: investment-backend
+spec: specs/001-portfolio-allocation/spec.md
+contract: contracts/portfolio/v1/openapi.json
+depends_on:
+  - INV-0005
+blockers:
+  - Produce backend implementation tasks and executable test expectations before READY
+acceptance:
+  - Preserve owner scaffold boundaries with additive reviewed changes
+  - Implement portfolio owned instruments holdings and targets with durable persistence
+  - Preserve exact original decimal strings and nullable unknown historical cost
+  - Enforce graph weight and revision invariants atomically
+  - Export and compare the implemented OpenAPI subset
+  - Pass API persistence and contract tests and CI on a PR to backend develop
+  - Report PR for owner review without agent merge

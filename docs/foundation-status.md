@@ -18,7 +18,7 @@
 - F02 / INV-0003 está DONE: [frontend PR #4](https://github.com/ViniciusHass/investment-frontend/pull/4) integrado por Sol a `develop`, merge `d3b4473`, após revisão técnica, inspeção visual e [CI foundation verde](https://github.com/ViniciusHass/investment-frontend/actions/runs/42501901783) no commit `3db937f`.
 - Instalação limpa, lint, typecheck, 28 testes unitários, 16 testes Playwright/axe e build passaram localmente. A CI Linux também passou em todas as etapas, incluindo instalação do Chromium. A recuperação do lockfile após erro de normalização foi validada sem alterar versões preexistentes de F01.
 - [INV-0004](../cards/INV-0004.md) registra manutenção BACKLOG para 10 advisories herdados em ferramentas de desenvolvimento; `npm audit --omit=dev` retornou zero. Nenhum upgrade maior foi feito sem seu próprio planejamento.
-- Clarificação de C01 iniciada: pergunta ao proprietário sobre representação de caixa e base dos percentuais, ainda sem resposta nesta sessão. Nenhuma decisão financeira foi presumida nem alteração aplicada ao spec 001 por ausência de resposta. OpenAPI/backend e decisões de dados/FX continuam dependências de F03 e telas financeiras.
+- C01 foi esclarecido pelo proprietário: scaffold pronto, caixa inicial zero, cadastro de posições e botão para recomendar ativos/quantidades. Sol definiu o contrato técnico; fonte e evidências estão na seção C01 abaixo. Nenhum requisito de endpoint/schema fica pendente do proprietário.
 - Factory PR #2 permanece aberto; nenhum merge em `main` nos três repositórios e nenhum PR backend integrado por Sol.
 
 ## Estado observado
@@ -26,7 +26,7 @@
 | Área | Evidência | Gate seguinte |
 |---|---|---|
 | Três repositórios | Factory, backend e frontend foram publicados como repositórios públicos em `ViniciusHass`. Backend/frontend têm `main` e `develop` remotos; URLs dos submódulos apontam para GitHub. Factory protege `main`; produtos protegem `main` e `develop`. | Finalizar contratos e cards antes das próximas funcionalidades de produto. |
-| Backend do proprietário | Repositório irmão contém árvore `src/api`, `src/domain`, `src/aplication`, `src/infrastruct` e `tests`. `src/main.py` contém apenas um comentário. Não foram encontrados `pyproject.toml`, `uv.lock`, modelos, migrações ou OpenAPI. Alguns arquivos chamados `__init__,py` têm vírgula antes de `py`, e `aplication`/`infrastruct` podem ser nomes provisórios. | Proprietário confirma ou conclui o scaffold; Sol revisa contratos e organização sem sobrescrever o trabalho dele. O Dockerfile da API aguarda `pyproject.toml`, `uv.lock` e `src.main:app`. |
+| Backend do proprietário | Scaffold estrutural confirmado pronto pelo proprietário em 2026-11-08. O checkout publicado ainda contém estrutura/entry point sem manifesto executável; esta é uma observação técnica de implementação, sem invalidar o aceite do scaffold. | Sol prepara contratos e decompõe runtime/API em card próprio preservando a estrutura; o proprietário revisa o PR. |
 | Frontend | INV-0002 e INV-0003 integrados a `develop` pelos PRs #3 e #4. Shell responsivo, pt-BR/en, estados compartilhados, testes de componente e Chromium/axe estão presentes; `main` ainda não recebeu o MVP. | F03 aguarda contratos e OpenAPI; INV-0004 aguarda planejamento específico de manutenção. |
 | Spec Kit | `specify` 1.3.0 inicializado na Factory com integração Codex e scripts PowerShell. A constituição e os specs anteriores ficaram intactos; `specify check` passou. | Clarificar specs, produzir planos e tarefas e analisá-los antes de converter tarefas aceitas em cards READY. |
 | Execução de agentes | `specify check` informou VS Code disponível, mas não encontrou Codex CLI. | Validar CLI/autenticação/modelos e Windows antes de prometer orquestração automática. A integração de skills instalada não prova execução automática. |
@@ -56,3 +56,13 @@
 - Tratamento de caixa e instrumentos que cabem em mais de um ramo.
 - Regras de score por tipo de instrumento e critérios de elegibilidade.
 - Regras de proteção e checks disponíveis nos repositórios públicos GitHub.
+
+## C01 — esclarecimento e contrato em 2026-11-08
+
+O proprietário confirmou o scaffold pronto e atribuiu a Sol a definição técnica do contrato. O MVP começa com caixa zero, permite cadastrar posições existentes e informar um novo aporte; “Calcular investimento” deve mostrar o que comprar, quantidades, custos estimados e saldo. O orçamento é simulação, não depósito ou compra executada.
+
+[INV-0005 / C01](../cards/INV-0005.md) conclui o desenho de [OpenAPI v0.1.0](../contracts/portfolio/v1/openapi.json), com plano/tarefas e análise Spec Kit. Validação executada: 36 schemas, 15 operações e 37 casos sintéticos (12 aceitos / 25 rejeitados), sem coerção e com invariantes de pesos/orçamento em aritmética exata. Treze operações são núcleo carteira/posições/metas; valuation e preview têm gates financeiros separados. Isso não representa endpoints implementados.
+
+[INV-0006](../cards/INV-0006.md) registra a implementação backend em BACKLOG até sua decomposição técnica, com preservação do scaffold, persistência e testes de API/OpenAPI; o proprietário revisará o PR e nenhum agente fará merge backend. F03 passa a ter uma fonte versionada de contrato; export/conformidade da API e integração real continuam trabalho de implementação. Não exigir definição de schemas/endpoints pelo proprietário.
+
+A pergunta de negócio sobre unidades inteiras ou frações foi enviada e ainda não recebeu resposta; nenhuma opção foi presumida. Provider/FX, score e taxas continuam gates de feature 004, sem dados inventados. Nenhum produto backend foi alterado e nenhuma main foi integrada nesta etapa de contrato.

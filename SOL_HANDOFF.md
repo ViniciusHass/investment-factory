@@ -67,3 +67,9 @@ Use GitHub Spec Kit for constitution → specify → clarify → plan → tasks 
 
 ## 11. Working agreement
 Do not claim a phase is implemented until commands and tests have actually run. Keep user approval for merges and major design choices. First deliver the frontend plan, then delegate its implementation. Keep the Factory focused on coordinating product development, not becoming an unnecessary application platform.
+
+## 12. Owner clarification — 2026-11-08
+
+The owner confirms the initial backend scaffold is ready. Sol defines the technical API contract, endpoints, schemas, validation and implementation cards. The owner supplies business needs and reviews backend PRs. Do not ask the owner to design the API or repeat the resolved scaffold-readiness question; preserve the owner's structure in implementation diffs.
+
+The MVP begins with zero cash. The person can enter existing holdings and a new investment amount; the action must indicate which investments to buy and the quantity of each. A recommendation neither executes an order nor records an actual purchase. Whole/fractional-unit policy is a pending business clarification. See [feature 001](specs/001-portfolio-allocation/spec.md), [feature 004](specs/004-rebalancing-engine/spec.md) and [C01 contract](contracts/portfolio/v1/README.md).

@@ -2,8 +2,12 @@
 
 Three repositories: `investment-factory` (orchestration/specifications), `investment-backend` (owner scaffolds FastAPI + SQLAlchemy + Alembic + PostgreSQL with uv), `investment-frontend` (Sol first plans long-term React + TypeScript + Vite architecture, Luna scaffolds after approval). Backend/frontend are Git submodules of Factory. Agents work in isolated Git worktrees.
 
+On 2026-11-08 the owner confirmed the initial backend scaffold is ready and assigned technical API contract design to Sol. The owner specifies business behavior; Sol defines versioned schemas, endpoints, validation and traceable cards. Backend implementation remains isolated and submitted for owner PR review, without replacing the owner's structure.
+
 ## Financial domain
 Portfolio allocation tree: geography (emerging/developed) → asset class (equities, real-estate funds, government bonds etc.) → sector → asset. Child weights are relative to parent and sum to 100% for fully allocated groups. At asset level use objective eligibility and scores, not arbitrary strategic weight overrides. Capture current positions, purchases, currencies, target percentages, contribution budget, planned vs actual allocations, and simulations. Optimize contributions under constraints; do not promise returns.
+
+The MVP starts with no holdings and zero cash. Existing holdings are entered separately from a new contribution budget. “Calculate investment” returns proposed instruments and quantities, estimated costs and unallocated budget; it neither executes an order nor records a realized purchase. Unknown prices, historical costs and FX remain distinct from the known initial zero balance.
 
 ## Data architecture
 React → FastAPI → domain/application services → financial provider adapters → external APIs. Persist normalized prices/fundamentals with as-of/collected-at timestamps, source, units, currency, quality and stale/missing status. Potential sources: brapi, Tesouro Transparente, BCB, international provider TBD. Verify API access and terms before choosing. No direct browser-to-provider access or client-side secrets.
