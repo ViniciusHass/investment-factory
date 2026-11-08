@@ -1,4 +1,4 @@
-# Portfolio API contract v0.1.0
+# Portfolio API contract v0.2.0
 
 **Design owner:** Sol. **Business decision:** owner, 2026-11-08. **Status:** contract-first technical design; the JSON does not claim these endpoints are deployed.
 
@@ -32,13 +32,13 @@ The browser never supplies market quotes, scores or FX rates in a preview reques
 
 ## Recommendation invariants
 
-Only owned, eligible instruments permitted by hierarchy/caps may receive a recommendation. Above-target branches do not receive buys merely for score. Quantity respects an explicitly versioned whole/fractional policy; neither the decimal-string shape nor a frontend default selects that business rule.
+Only owned, eligible instruments permitted by hierarchy/caps may receive a recommendation. Above-target branches do not receive buys merely for score. Stock quantities are integral; products that support fractions follow verified unit/minimum/increment rules. The decimal-string shape alone does not authorize fractional trading. Stock integer values with zero decimal suffix remain equivalent to whole units.
 
 Allocated + remaining equals original budget in the original budget currency using exact arithmetic. The sum of recommendation budget costs equals allocated budget. Native-currency price/cost and any budget-currency conversion remain distinct. Fees, FX, eligibility, allocation and trading policies must be identified in a ready snapshot. Missing/stale quotes/FX or unresolved policies return blocked rather than assume zero or a made-up rate. No fit under valid constraints may return ready with no buys and all budget left, with an explanation.
 
 All financial inputs in snapshots carry actual backend source/timestamps. Same-currency conversion does not require a fabricated provider quote. Market valuation does not depend on having a trading/scoring policy; recommendation snapshots add those policy versions separately. When invested value is zero, allocation percentages/deviations are null instead of dividing by zero.
 
-Initial-zero cash does not settle treatment of future nonzero cash in allocation, deposit history, taxes/dividends or fees. Those policies must be explicit before their calculation paths are enabled. The whole/fractional-unit question is pending; CRUD and generated types can progress independently.
+Initial-zero cash does not settle treatment of future nonzero cash in allocation, deposit history, taxes/dividends or fees. Those policies must be explicit before their calculation paths are enabled. The owner resolved the quantity rule: stocks integral, other products fractional only where supported. Required product metadata still needs verification; its absence is explicit, without reopening the business question.
 
 ## Checks and fixtures
 
@@ -49,3 +49,9 @@ Initial-zero cash does not settle treatment of future nonzero cash in allocation
 ## Standards
 
 [OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html) and [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html). Product/contract versioning here does not create release tags or approve a release policy.
+
+## Quantity policy and persistence design — 2026-11-08
+
+[ADR0006](../../../docs/decisions/0006-product-quantity-rules.md) records whole stock quantities and product-specific fractions. HoldingWrite contains an instrument ID, so the backend must look up its kind and reject fractional stock inventory with 422 and a pointer to quantity. Recommendation and Holding response schemas also reject fractional stock quantities when the embedded instrument kind is stock. Existing inventory is not subjected to the current minimum of a new order.
+
+The current stock/ETF interface does not encode a CDB as a share with a fabricated unit price. Future deposit-product principal and identity follow their own accepted contract. See the [physical database plan](../../../docs/database-design.md) for storage, revisions, constraints, migrations and required integration tests. v0.2.0 versions this design update; it is not a product release or tag.

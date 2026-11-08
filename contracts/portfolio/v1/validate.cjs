@@ -92,6 +92,11 @@ function validatePreview(value) {
   assert(exactSumEquals(value.recommendations.map(item => item.estimated_budget_cost.amount), value.allocated_budget.amount), 'Recommendation costs do not match allocated budget')
 }
 
+function validateStockQuantity(quantity) {
+  const part = exactParts(quantity)
+  assert.equal(BigInt(part.digits) % (10n ** BigInt(part.scale)), 0n, 'Stock quantity must be integral')
+}
+
 async function main() {
   const allRefs = JSON.stringify(contract).match(/"\$ref"\s*:\s*"([^"]+)"/g) || []
   for (const declaration of allRefs) {
@@ -138,6 +143,10 @@ async function main() {
       try {
         if (fixture.semantic === 'targets') validateTargets(fixture.payload)
         else if (fixture.semantic === 'preview') validatePreview(fixture.payload)
+        else if (fixture.semantic === 'stock_holding') {
+          assert.equal(fixture.instrument_kind, 'stock')
+          validateStockQuantity(fixture.payload.quantity)
+        }
         else throw new Error('Unknown semantic fixture category')
       } catch {
         valid = false

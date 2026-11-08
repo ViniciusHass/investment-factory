@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "Investment Factory portfolio API contract",
-    "version": "0.1.0",
-    "description": "Sol technical design, 2026-11-08. Contract-first; routes are planned interfaces, not a claim of deployed endpoints. C01 core covers portfolio, holdings, targets and safe decimal records. Valuation/preview interfaces have explicit financial-data and policy gates. No brokerage orders or provider credentials."
+    "version": "0.2.0",
+    "description": "Sol technical design, 2026-11-08. Contract-first; routes are planned interfaces, not a claim of deployed endpoints. C01 core covers portfolio, holdings, targets and safe decimal records. Valuation/preview interfaces have explicit financial-data and policy gates. No brokerage orders or provider credentials. Owner quantity policy confirmed: stock quantities are integral; other products may be fractional only under verified product-specific rules."
   },
   "servers": [
     {
@@ -1100,7 +1100,7 @@
       "HoldingWrite": {
         "type": "object",
         "additionalProperties": false,
-        "description": "Inventory snapshot, not a purchase. On create and full replacement, omitted cost/date become null; they are never inferred from a quote.",
+        "description": "Inventory snapshot, not a purchase. On create and full replacement, omitted cost/date become null; they are never inferred from a quote. The backend looks up instrument kind: stock inventory must be integral. Current order minimums must not invalidate already-existing inventory.",
         "required": [
           "instrument_id",
           "quantity"
@@ -1199,7 +1199,39 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "required": [
+                "instrument"
+              ],
+              "properties": {
+                "instrument": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "stock"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*(\\.0+)?$"
+                }
+              }
+            }
+          }
+        ]
       },
       "HoldingList": {
         "type": "object",
@@ -1590,12 +1622,44 @@
             },
             "minItems": 1
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "required": [
+                "instrument"
+              ],
+              "properties": {
+                "instrument": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "stock"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*(\\.0+)?$"
+                }
+              }
+            }
+          }
+        ]
       },
       "ContributionPreviewReady": {
         "type": "object",
         "additionalProperties": false,
-        "description": "Original budget = allocated budget + remaining budget in the original budget currency using exact decimals. The sum of estimated_budget_cost equals allocated_budget. Only owned, eligible investments within hierarchy/caps may receive buys; quantity obeys an explicitly approved trading policy. Empty recommendations with all budget left are valid when no permissible purchase fits.",
+        "description": "Original budget = allocated budget + remaining budget in the original budget currency using exact decimals. The sum of estimated_budget_cost equals allocated_budget. Only owned, eligible investments within hierarchy/caps may receive buys; stock quantity is integral and all quantities obey the product's verified minimum/increment policy. Empty recommendations with all budget left are valid when no permissible purchase fits.",
         "required": [
           "status",
           "original_budget",

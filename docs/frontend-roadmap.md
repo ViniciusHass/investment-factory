@@ -179,4 +179,8 @@ F01 está concluído em frontend `develop`. Prosseguir com Spec Kit 1.3.0 nos co
 
 ## Contrato C01 e entrada de aporte — 2026-11-08
 
-O proprietário confirmou o scaffold pronto e atribuiu a Sol o contrato técnico. O MVP começa com caixa zero e permite cadastrar posições existentes e informar quanto investir. O botão “Calcular investimento” retorna investimentos, quantidades, custos estimados e saldo, sem executar ou registrar compras. Ver [C01](../contracts/portfolio/v1/README.md). Whole/fractional-unit policy é uma pergunta de negócio pendente; nenhuma política foi inferida a partir do schema decimal. Endpoints ainda dependem de implementação backend, não da definição de contrato pelo proprietário.
+O proprietário confirmou o scaffold pronto e atribuiu a Sol o contrato técnico. O MVP começa com caixa zero e permite cadastrar posições existentes e informar quanto investir. O botão “Calcular investimento” retorna investimentos, quantidades, custos estimados e saldo, sem executar ou registrar compras. Ver [C01](../contracts/portfolio/v1/README.md). O proprietário definiu ações inteiras e frações somente nos produtos que as permitem, conforme mínimo/incremento verificados. A pergunta de negócio foi respondida; dados do produto não serão inventados. Endpoints ainda dependem de implementação backend, não da definição de contrato pelo proprietário.
+
+## Quantidades e persistência — 2026-11-08
+
+Ações têm quantidades inteiras; produtos fracionáveis seguem dados verificados de capacidade/mínimo/incremento. Campos decimais não autorizam frações por si só. O [planejamento do banco](database-design.md) e o [ADR0006](decisions/0006-product-quantity-rules.md) agora acompanham o contrato C01. Estado corrente, histórico e conversões são separados; preview não altera posições/caixa. Migrações backend e integração real permanecem cards próprios.

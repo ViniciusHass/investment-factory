@@ -9,6 +9,8 @@ User stories: **US1 (P1)** starts with an empty portfolio and zero cash, then re
 
 ### Session 2026-11-08
 
+- Q: Must all investment quantities be integral, or may they be fractional? → A: Stocks require whole units. Products that permit fractions, such as CDBs, may be fractional under their verified product rules.
+
 - Q: Is the backend scaffold ready, and who defines the API contract? → A: The owner confirms the scaffold is ready; Sol owns technical contract design. The owner supplies business needs and reviews backend PRs.
 - Q: How does the MVP begin and how does the person request investment recommendations? → A: Cash starts at zero; the person can enter existing holdings and the amount they want to invest. A button must indicate which investments to buy and the quantity of each.
 
@@ -29,4 +31,4 @@ Contract design, endpoint naming and request/response schemas are Sol's responsi
 - The frontend shows an explicit unavailable/blocked result when required prices, FX, allocation policy or trading constraints are absent. It must not invent quantities so the button appears to work.
 
 ## Open questions
-Initial cash is zero, existing holdings are entered by the person and new-contribution recommendations show quantities. The contribution budget is a simulation input; submitting it does not itself record a deposit, purchase or sale. Detailed cash movements and overlapping instrument categories remain separate business-policy work. USD is the initial consolidation currency; the current-FX policy still needs a source, freshness limit and rounding rule. Whole/fractional-unit policy is being clarified for feature 004; it does not block the portfolio/holdings/targets contract.
+Initial cash is zero, existing holdings are entered by the person and new-contribution recommendations show quantities. The contribution budget is a simulation input; submitting it does not itself record a deposit, purchase or sale. Detailed cash movements and overlapping instrument categories remain separate business-policy work. USD is the initial consolidation currency; the current-FX policy still needs a source, freshness limit and rounding rule. Quantity policy is confirmed: stocks use integral quantities, and products that permit fractions follow their verified unit/minimum/increment rules. Product metadata, not a repeated owner choice between whole/fractional globally, gates a recommendation. See the database plan and ADR 0006.

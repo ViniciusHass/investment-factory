@@ -43,4 +43,13 @@ T001 → T002 → T003; US1/US2 schema work shares the canonical OpenAPI, so one
 
 ## Implementation strategy
 
-Publish and validate core C01 first. Prepare backend persistence/API and frontend client cards against this versioned source. Their endpoint/export/contract checks must pass before integrated financial screens are enabled. Whole/fractional units, provider/FX freshness and scoring/fee policy cannot be inferred from schemas; use blocked states until their business/data decisions are explicit.
+Publish and validate core C01 first. Prepare backend persistence/API and frontend client cards against this versioned source. Their endpoint/export/contract checks must pass before integrated financial screens are enabled. Stock quantities are integral and other fractions depend on the product's verified capability. Provider/FX freshness, scoring/fee policy and product minimum/increment data cannot be inferred from schemas; missing required inputs produce blocked results.
+
+## Owner quantity and database planning increment — 2026-11-08
+
+These tasks update the design slice; they do not mark backend migrations as implemented.
+
+- [x] T013 [US1] Record whole-stock and product-specific fractional policy in `specs/001-portfolio-allocation/spec.md`, `specs/004-rebalancing-engine/spec.md` and `docs/decisions/0006-product-quantity-rules.md`.
+- [x] T014 Define physical tables, exact original storage, keys, transaction/history rules, migration phases and PostgreSQL acceptance tests in `docs/database-design.md`.
+- [x] T015 Link persistence planning into `specs/001-portfolio-allocation/plan.md`, `data-model.md` and `cards/INV-0006.md`; preserve its implementation status.
+- [x] T016 Validate whole-stock rejection/acceptance and a synthetic fractional-product case through `contracts/portfolio/v1/validate.cjs`, then review contract/database/owner-decision consistency.

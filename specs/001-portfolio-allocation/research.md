@@ -19,4 +19,10 @@ Pinned swagger-parser [version support](https://raw.githubusercontent.com/APIDev
 
 ## Deferred policies
 
-Provider coverage/terms, FX freshness, scoring thresholds, fees and whole/fractional increments belong to features 002–004. The contract supports their future versioned snapshots and explicit blocked states. Nonzero-cash allocation treatment is not silently decided from the initial-zero requirement. These do not block inventory/targets contract design.
+Provider coverage/terms, FX freshness, scoring thresholds and fees remain in features 002–004. The owner confirmed stock quantities integral and product fractions allowed when supported; actual unit/minimum/increment metadata must be verified before recommendations. The contract supports their future versioned snapshots and explicit blocked states. Nonzero-cash allocation treatment is not silently decided from the initial-zero requirement. These do not block inventory/targets contract design.
+
+## Database research increment — 2026-11-08
+
+Use PostgreSQL 17 already configured by Compose. Preserve raw accepted decimal text, use unconstrained exact numeric within lexical bounds, and verify generated casts as immutable in the real migration. PostgreSQL17 generated columns are STORED and cannot depend on another generated column. Cross-row allocation checks require transaction validation/constraint triggers, not CHECK functions that read other rows. Lock the portfolio before checking revision/writing children. Alembic autogenerate candidates require review; CHECK detection depends on version/options and does not prove expression changes.
+
+Verified official references and detailed reasoning are in [database design](../../docs/database-design.md). This is planning/research only, not a claim of executed SQL or migrations.

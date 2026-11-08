@@ -65,4 +65,12 @@ O proprietário confirmou o scaffold pronto e atribuiu a Sol a definição técn
 
 [INV-0006](../cards/INV-0006.md) registra a implementação backend em BACKLOG até sua decomposição técnica, com preservação do scaffold, persistência e testes de API/OpenAPI; o proprietário revisará o PR e nenhum agente fará merge backend. F03 passa a ter uma fonte versionada de contrato; export/conformidade da API e integração real continuam trabalho de implementação. Não exigir definição de schemas/endpoints pelo proprietário.
 
-A pergunta de negócio sobre unidades inteiras ou frações foi enviada e ainda não recebeu resposta; nenhuma opção foi presumida. Provider/FX, score e taxas continuam gates de feature 004, sem dados inventados. Nenhum produto backend foi alterado e nenhuma main foi integrada nesta etapa de contrato.
+O proprietário respondeu: ações têm quantidades inteiras; investimentos que permitem frações, como CDB, seguem regras verificadas do produto. A pergunta foi encerrada, sem presumir mínimos/incrementos ou ampliar automaticamente cobertura de mercados. Provider/FX, score e taxas continuam gates de feature 004, sem dados inventados. Nenhum produto backend foi alterado e nenhuma main foi integrada nesta etapa de contrato.
+
+## Quantidades e banco de dados — 2026-11-08
+
+Ações inteiras e frações condicionadas ao produto estão confirmadas em [ADR0006](decisions/0006-product-quantity-rules.md). O [banco foi planejado](database-design.md) com tabelas, relacionamentos, originais textuais/numeric, revisões, concorrência, constraints, etapas Alembic e testes PG17. Nenhuma migration foi executada e nenhum scaffold backend foi alterado.
+
+Contrato v0.2.0: 36 schemas, 15 operações, 42 casos sintéticos passaram (15 aceitos/27 rejeitados). INV-0006 inclui o plano de persistência, mantendo implementação não iniciada. A cobertura inicial continua US stock/ETF; o planejamento permite extensão para principal de CDB sem instrumentos/quotes falsos.
+
+[Continuidade da automação](automation-continuity.md): sessões anteriores observadas são distintas; não foi confirmada a configuração atual de destino nem alterado o agendamento. Decisões, estado e PRs publicados são a fonte durável de retomada; o histórico de chat pode ser consultado explicitamente quando disponível.

@@ -23,3 +23,7 @@ Spec Kit artifacts → Sol decomposition → Factory cards → Luna worktree imp
 Backend and frontend each have a `develop` integration branch. An approved card uses a separate branch and worktree based on `develop`, then a PR to `develop` with GitHub Actions checks. Backend card merges require owner approval. The owner delegates frontend card merges into frontend `develop` to Sol after CI and technical review; Luna never merges. After MVP testing, the owner and Sol finalize CI gates and the owner approves any promotion to `main`; see `docs/decisions/0003-branches-and-ci.md`.
 
 Subsequent product-repository commits are atomic and follow the existing Conventional Commit message style; SemVer for backend and frontend releases is planned separately after manifests and CI stabilize. See `docs/decisions/0005-commits-and-versioning.md`.
+
+## Database planning and quantity policy
+
+[Database design](database-design.md) specifies PostgreSQL17 tables, exact original-value storage, graph constraints, revisions/snapshots, transaction boundaries, migrations and integration tests. The owner confirmed whole stock quantities and product-specific fractional capability in [ADR0006](decisions/0006-product-quantity-rules.md). Fractions in a generic decimal field do not bypass instrument rules. No database migration is implied by publishing this plan.

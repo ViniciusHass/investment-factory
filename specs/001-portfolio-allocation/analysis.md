@@ -32,4 +32,10 @@ Pinned swagger-parser 11.0.0 + Ajv2020 8.17.1 + ajv-formats 3.0.1 on portable No
 
 ## Deferred work and next action
 
-Whole/fractional units is a feature-004 business question still pending. Providers/FX freshness, score/fees and nonzero-cash policies remain explicit gates for calculation cards. They do not block C01 CRUD design. Backend implementation/card-specific tasks, actual FastAPI OpenAPI export and runtime conformance must precede claims of API integration. [INV-0006](../../cards/INV-0006.md) remains BACKLOG until decomposed.
+Quantity policy is resolved by the owner's later 2026-11-08 reply: stocks integral, other products fractional only when supported by verified product rules. Providers/FX freshness, score/fees and nonzero-cash policies remain explicit gates for calculation cards. They do not block C01 CRUD design. Backend implementation/card-specific tasks, actual FastAPI OpenAPI export and runtime conformance must precede claims of API integration. [INV-0006](../../cards/INV-0006.md) remains BACKLOG until decomposed.
+
+## Quantity and database review — 2026-11-08
+
+Owner policy is recorded in ADR0006; no whole/fractional question remains open. Contract design v0.2.0 still has 36 schemas and 15 operations; validation PASS with 42 synthetic cases (15 accepted / 27 rejected), including fractional-stock rejection in recommendations and inventory context, equivalent whole representations, and an explicitly synthetic fractional-product policy. Backend lookup and PostgreSQL enforcement remain implementation work.
+
+Physical persistence is specified in the database design: original text/exact numeric, normalized identities, composite parent keys, zero initial cash, immutable revision/snapshot history, portfolio locks and deferred graph checks. Constraints/migrations have not been executed, and real PG17 tests are required in INV-0006. Four planning tasks T013–T016 are complete; no backend product task is marked done by this review. No critical cross-artifact inconsistency was found in this design increment.

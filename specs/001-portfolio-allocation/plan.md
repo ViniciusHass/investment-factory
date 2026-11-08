@@ -21,14 +21,14 @@ Sol owns the technical contract after the owner's scaffold-ready confirmation. D
 | Principle | Pre/post-design result |
 |---|---|
 | Specification first | PASS: owner's business clarification is recorded and all interface behavior has explicit schemas and invariants. |
-| Objective logic | PASS: no provider, scoring threshold or whole/fractional policy invented; blocked calculations carry reasons. |
+| Objective logic | PASS: owner stock/product quantity rule is recorded; provider inputs, score thresholds and product minimum/increment metadata are not invented. |
 | Traceability | PASS: tasks/cards link to feature 001, feature 004 and the canonical contract. |
 | Separation | PASS: contracts in Factory; backend handles money and provider ports; client only calls FastAPI. |
 | Reproducibility | PASS: versioned schemas, fixture cases, original decimal strings and calculation-source snapshots. |
 | Human authority | PASS: no backend merge, no main merge; future frontend merge requires review/CI. |
 | Least privilege | PASS: no credential-bearing schema field, external reference resolution disabled in validator. |
 
-**Gate:** PASS for C01 contract design. This does not approve the financial optimizer or a provider adapter. Whole/fractional quantity policy is a feature-004 business question; no core-CRUD choice depends on its answer.
+**Gate:** PASS for C01 contract design. This does not approve the financial optimizer or a provider adapter. The owner confirmed whole stocks and product-specific fractional capability; remaining minimum/increment facts are product metadata, not an unresolved universal business choice.
 
 ## Project Structure
 
@@ -44,3 +44,9 @@ US1: portfolio creation and entered holdings; US2: target graph; US3: preview re
 ## Complexity Tracking
 
 No constitution exception. A flat target-node list avoids recursive response duplication and supports omitted layers. No scheduler, global frontend store or general ledger is added. A preview budget is not a ledger deposit.
+
+## Database planning increment — 2026-11-08
+
+The owner explicitly requested database planning alongside the API contract. [Database design](../../docs/database-design.md) is the physical persistence plan: PostgreSQL 17 from Compose, current relational tables, original decimal text plus exact numeric values, portfolio revisions, allocation guards, product quantity rules, locks/ETags, later market/plan/realized records and migration/test sequence. No schema was applied. [ADR 0006](../../docs/decisions/0006-product-quantity-rules.md) closes the universal whole/fractional business question.
+
+Backend card INV-0006 must include M1/M2 persistence and its PostgreSQL integration checks before implementation is considered complete; contract-only tests cannot substitute for database execution. Do not overwrite the accepted scaffold or create a universal integer/fractional switch.
