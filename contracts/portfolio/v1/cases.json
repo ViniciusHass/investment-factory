@@ -1,0 +1,1230 @@
+{
+  "purpose": "Synthetic schema and semantic fixtures only. Invented amounts/quotes are never market observations, investment advice or runtime application data.",
+  "cases": [
+    {
+      "name": "Create portfolio without forcing a reporting default in client",
+      "schema": "PortfolioCreate",
+      "valid": true,
+      "payload": {
+        "name": "Contract fixture"
+      }
+    },
+    {
+      "name": "Reject unknown portfolio input field",
+      "schema": "PortfolioCreate",
+      "valid": false,
+      "payload": {
+        "name": "Fixture",
+        "cash": "100"
+      }
+    },
+    {
+      "name": "Initial portfolio has known zero cash and no holdings",
+      "schema": "PortfolioCreated",
+      "valid": true,
+      "payload": {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "name": "Fixture",
+        "reporting_currency": "USD",
+        "revision": 1,
+        "cash_balances": [
+          {
+            "amount": "0",
+            "currency": "USD"
+          }
+        ],
+        "holding_count": 0,
+        "targets_configured": false,
+        "created_at": "2026-11-08T00:00:00Z",
+        "updated_at": "2026-11-08T00:00:00Z"
+      }
+    },
+    {
+      "name": "Holding preserves original amount spelling",
+      "schema": "HoldingWrite",
+      "valid": true,
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "2.000",
+        "original_cost": {
+          "amount": "1234.5600",
+          "currency": "BRL"
+        },
+        "as_of_date": null
+      }
+    },
+    {
+      "name": "Unknown original cost stays null",
+      "schema": "HoldingWrite",
+      "valid": true,
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "2",
+        "original_cost": null,
+        "as_of_date": null
+      }
+    },
+    {
+      "name": "Reject zero inventory quantity",
+      "schema": "HoldingWrite",
+      "valid": false,
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "0.00"
+      }
+    },
+    {
+      "name": "Reject float inventory quantity",
+      "schema": "HoldingWrite",
+      "valid": false,
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": 0.125
+      }
+    },
+    {
+      "name": "Reject exponent amount",
+      "schema": "Money",
+      "valid": false,
+      "payload": {
+        "amount": "1e3",
+        "currency": "USD"
+      }
+    },
+    {
+      "name": "Reject numeric money amount",
+      "schema": "Money",
+      "valid": false,
+      "payload": {
+        "amount": 100,
+        "currency": "USD"
+      }
+    },
+    {
+      "name": "Reject negative original amount",
+      "schema": "Money",
+      "valid": false,
+      "payload": {
+        "amount": "-1",
+        "currency": "USD"
+      }
+    },
+    {
+      "name": "Reject lower-case currency",
+      "schema": "Money",
+      "valid": false,
+      "payload": {
+        "amount": "10.00",
+        "currency": "usd"
+      }
+    },
+    {
+      "name": "Reject injected valuation input",
+      "schema": "HoldingWrite",
+      "valid": false,
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "2",
+        "current_value": {
+          "amount": "99",
+          "currency": "USD"
+        }
+      }
+    },
+    {
+      "name": "Empty target tree is valid",
+      "schema": "TargetsWrite",
+      "valid": true,
+      "semantic": "targets",
+      "payload": {
+        "nodes": []
+      }
+    },
+    {
+      "name": "Single geography leaf valid without children",
+      "schema": "TargetsWrite",
+      "valid": true,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Investment may attach to root with omitted layers",
+      "schema": "TargetsWrite",
+      "valid": true,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "investment",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": "00000000-0000-4000-8000-000000000002"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Exact fractional sibling sums",
+      "schema": "TargetsWrite",
+      "valid": true,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000011",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "0.1",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000012",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "0.2",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000013",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "99.7",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject wrong root total",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "99.99",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject wrong child total atomically",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000011",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "90",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject duplicate IDs",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "50",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "50",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject missing parent",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": "00000000-0000-4000-8000-000000000099",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject graph cycle",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": "00000000-0000-4000-8000-000000000011",
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000011",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject reversed layer order",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000011",
+            "parent_id": "00000000-0000-4000-8000-000000000010",
+            "kind": "geography",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject missing investment identity",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "investment",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reject identity on sector",
+      "schema": "TargetsWrite",
+      "valid": false,
+      "semantic": "targets",
+      "payload": {
+        "nodes": [
+          {
+            "id": "00000000-0000-4000-8000-000000000010",
+            "parent_id": null,
+            "kind": "sector",
+            "label": "Synthetic fixture",
+            "relative_weight": "100",
+            "instrument_id": "00000000-0000-4000-8000-000000000002"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Zero preview budget is invalid",
+      "schema": "ContributionPreviewRequest",
+      "valid": false,
+      "payload": {
+        "budget": {
+          "amount": "0",
+          "currency": "USD"
+        }
+      }
+    },
+    {
+      "name": "Preview request has no client price/score injection",
+      "schema": "ContributionPreviewRequest",
+      "valid": false,
+      "payload": {
+        "budget": {
+          "amount": "10",
+          "currency": "USD"
+        },
+        "quote": {
+          "instrument_id": "00000000-0000-4000-8000-000000000002",
+          "unit_price": {
+            "amount": "3.00",
+            "currency": "USD"
+          },
+          "quantity_unit": "share",
+          "quality": "fresh",
+          "source": {
+            "id": "synthetic-fixture-only",
+            "record_id": null,
+            "as_of": "2026-11-08T00:00:00Z",
+            "collected_at": "2026-11-08T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "Ready scenario conserves original decimal budget",
+      "schema": "ContributionPreview",
+      "valid": true,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "6.00",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "4.0000",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Reject overspending ready result",
+      "schema": "ContributionPreview",
+      "valid": false,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "11",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "4.0000",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Reject mixed-currency budget totals",
+      "schema": "ContributionPreview",
+      "valid": false,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "6.00",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "4",
+          "currency": "BRL"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Reject recommendation cost mismatch",
+      "schema": "ContributionPreview",
+      "valid": false,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "6.00",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "4.0000",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "5",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Blocked calculation has reasons only",
+      "schema": "ContributionPreview",
+      "valid": true,
+      "payload": {
+        "status": "blocked",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "reasons": [
+          {
+            "code": "TRADING_RULES_UNDEFINED",
+            "detail": "Synthetic test only: trading policy not configured."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Blocked calculation cannot leak fake quantities",
+      "schema": "ContributionPreview",
+      "valid": false,
+      "payload": {
+        "status": "blocked",
+        "original_budget": {
+          "amount": "10",
+          "currency": "USD"
+        },
+        "reasons": [
+          {
+            "code": "TRADING_RULES_UNDEFINED",
+            "detail": "Synthetic test only: trading policy not configured."
+          }
+        ],
+        "recommendations": []
+      }
+    },
+    {
+      "name": "Unavailable valuation cannot look like zero",
+      "schema": "Valuation",
+      "valid": false,
+      "payload": {
+        "status": "unavailable",
+        "reasons": [
+          {
+            "code": "TRADING_RULES_UNDEFINED",
+            "detail": "Synthetic test only: trading policy not configured."
+          }
+        ],
+        "invested_positions_value": {
+          "amount": "0",
+          "currency": "USD"
+        }
+      }
+    },
+    {
+      "name": "Valuation unavailable explicitly preserves absence",
+      "schema": "Valuation",
+      "valid": true,
+      "payload": {
+        "status": "unavailable",
+        "reasons": [
+          {
+            "code": "TRADING_RULES_UNDEFINED",
+            "detail": "Synthetic test only: trading policy not configured."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Valuation does not require trading policy",
+      "schema": "Valuation",
+      "valid": true,
+      "payload": {
+        "status": "available",
+        "invested_positions_value": {
+          "amount": "0",
+          "currency": "USD"
+        },
+        "allocations": [],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [],
+          "fx_rates": []
+        }
+      }
+    },
+    {
+      "name": "Reject nonzero cash at creation",
+      "schema": "PortfolioCreated",
+      "valid": false,
+      "payload": {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "name": "Fixture",
+        "reporting_currency": "USD",
+        "revision": 1,
+        "cash_balances": [
+          {
+            "amount": "10",
+            "currency": "USD"
+          }
+        ],
+        "holding_count": 0,
+        "targets_configured": false,
+        "created_at": "2026-11-08T00:00:00Z",
+        "updated_at": "2026-11-08T00:00:00Z"
+      }
+    },
+    {
+      "name": "Reject pre-existing holdings at creation",
+      "schema": "PortfolioCreated",
+      "valid": false,
+      "payload": {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "name": "Fixture",
+        "reporting_currency": "USD",
+        "revision": 1,
+        "cash_balances": [
+          {
+            "amount": "0",
+            "currency": "USD"
+          }
+        ],
+        "holding_count": 1,
+        "targets_configured": false,
+        "created_at": "2026-11-08T00:00:00Z",
+        "updated_at": "2026-11-08T00:00:00Z"
+      }
+    },
+    {
+      "name": "Stock recommendation rejects fractional quantity",
+      "schema": "ContributionPreview",
+      "valid": false,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "1.50",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "8.50",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "0.5",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "1.50",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "1.50",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Stock integer value accepts zero fractional suffix",
+      "schema": "ContributionPreview",
+      "valid": true,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "6.00",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "4.0000",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ticker": "TESTONLY",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "stock",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2.000",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "6.00",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000002",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "fixture-whole-units-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Fractional product uses an explicit synthetic policy fixture",
+      "schema": "ContributionPreview",
+      "valid": true,
+      "semantic": "preview",
+      "payload": {
+        "status": "ready",
+        "original_budget": {
+          "amount": "10.0000",
+          "currency": "USD"
+        },
+        "allocated_budget": {
+          "amount": "7.50",
+          "currency": "USD"
+        },
+        "remaining_budget": {
+          "amount": "2.50",
+          "currency": "USD"
+        },
+        "recommendations": [
+          {
+            "instrument": {
+              "id": "00000000-0000-4000-8000-000000000003",
+              "ticker": "TESTETF",
+              "exchange_mic": "XNAS",
+              "currency": "USD",
+              "kind": "etf",
+              "metadata_status": "user_entered"
+            },
+            "quantity": "2.5",
+            "unit_price": {
+              "instrument_id": "00000000-0000-4000-8000-000000000003",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            },
+            "estimated_instrument_cost": {
+              "amount": "7.50",
+              "currency": "USD"
+            },
+            "estimated_budget_cost": {
+              "amount": "7.50",
+              "currency": "USD"
+            },
+            "reason_codes": [
+              "BELOW_TARGET"
+            ]
+          }
+        ],
+        "snapshot": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "created_at": "2026-11-08T00:00:00Z",
+          "portfolio_revision": 1,
+          "targets_revision": 1,
+          "calculation_version": "fixture-only-v1",
+          "fx_policy_version": "fixture-identity-only-v1",
+          "quotes": [
+            {
+              "instrument_id": "00000000-0000-4000-8000-000000000003",
+              "unit_price": {
+                "amount": "3.00",
+                "currency": "USD"
+              },
+              "quantity_unit": "share",
+              "quality": "fresh",
+              "source": {
+                "id": "synthetic-fixture-only",
+                "record_id": null,
+                "as_of": "2026-11-08T00:00:00Z",
+                "collected_at": "2026-11-08T00:00:00Z"
+              }
+            }
+          ],
+          "fx_rates": [],
+          "allocation_policy_version": "fixture-only-v1",
+          "eligibility_policy_version": "fixture-only-v1",
+          "trading_policy_version": "synthetic-verified-product-fractions-v1",
+          "fees_policy_version": "fixture-no-fees-v1"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "Stock inventory 0.5 enforces looked-up instrument kind",
+      "schema": "HoldingWrite",
+      "valid": false,
+      "semantic": "stock_holding",
+      "instrument_kind": "stock",
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "0.5",
+        "original_cost": null
+      }
+    },
+    {
+      "name": "Stock inventory 2.000 enforces looked-up instrument kind",
+      "schema": "HoldingWrite",
+      "valid": true,
+      "semantic": "stock_holding",
+      "instrument_kind": "stock",
+      "payload": {
+        "instrument_id": "00000000-0000-4000-8000-000000000002",
+        "quantity": "2.000",
+        "original_cost": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,1963 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Investment Factory portfolio API contract",
+    "version": "0.2.0",
+    "description": "Sol technical design, 2026-11-08. Contract-first; routes are planned interfaces, not a claim of deployed endpoints. C01 core covers portfolio, holdings, targets and safe decimal records. Valuation/preview interfaces have explicit financial-data and policy gates. No brokerage orders or provider credentials. Owner quantity policy confirmed: stock quantities are integral; other products may be fractional only under verified product-specific rules."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/v1",
+      "description": "Local FastAPI development; not deployed by this document."
+    }
+  ],
+  "tags": [
+    {
+      "name": "portfolio"
+    },
+    {
+      "name": "holdings"
+    },
+    {
+      "name": "targets"
+    },
+    {
+      "name": "valuation"
+    },
+    {
+      "name": "contributions"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/portfolios": {
+      "get": {
+        "operationId": "listPortfolios",
+        "tags": [
+          "portfolio"
+        ],
+        "summary": "List personal portfolios",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioList"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPortfolio",
+        "tags": [
+          "portfolio"
+        ],
+        "summary": "Create empty portfolio with zero cash",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortfolioCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created with zero cash and holdings",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        }
+      ],
+      "get": {
+        "operationId": "getPortfolio",
+        "tags": [
+          "portfolio"
+        ],
+        "summary": "Read original settings and cash",
+        "responses": {
+          "200": {
+            "description": "Portfolio",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updatePortfolio",
+        "tags": [
+          "portfolio"
+        ],
+        "summary": "Change name or reporting preference without rewriting records",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortfolioPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "412": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "428": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/instruments": {
+      "post": {
+        "operationId": "registerOwnedInstrument",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Normalize identity for a user-entered owned instrument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstrumentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Existing normalized identity; idempotent registration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instrument"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instrument"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/instruments/{instrument_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/InstrumentId"
+        }
+      ],
+      "get": {
+        "operationId": "getInstrument",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Read registered instrument identity",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instrument"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}/holdings": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        }
+      ],
+      "get": {
+        "operationId": "listHoldings",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Read original inventory records",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holding page",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldingList"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createHolding",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Register current inventory without recording a purchase",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldingWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Holding"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "412": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "428": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}/holdings/{holding_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        },
+        {
+          "$ref": "#/components/parameters/HoldingId"
+        }
+      ],
+      "get": {
+        "operationId": "getHolding",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Read one original holding",
+        "responses": {
+          "200": {
+            "description": "Holding",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Holding"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "put": {
+        "operationId": "replaceHolding",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Correct a current inventory record",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldingWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replaced; omitted cost/date become null",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Holding"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "412": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "428": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "removeHolding",
+        "tags": [
+          "holdings"
+        ],
+        "summary": "Remove an inventory record; never a brokerage sale",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed inventory; persisted plans/snapshots are unchanged.",
+            "headers": {
+              "ETag": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "412": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "428": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}/targets": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        }
+      ],
+      "get": {
+        "operationId": "getTargets",
+        "tags": [
+          "targets"
+        ],
+        "summary": "Read optional allocation hierarchy",
+        "responses": {
+          "200": {
+            "description": "Allocation tree",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Targets"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "put": {
+        "operationId": "replaceTargets",
+        "tags": [
+          "targets"
+        ],
+        "summary": "Atomically replace validated sibling allocations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetsWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replaced",
+            "headers": {
+              "ETag": {
+                "description": "Strong aggregate portfolio revision tag.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Targets"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "412": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "428": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}/valuation": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        }
+      ],
+      "get": {
+        "operationId": "getValuation",
+        "tags": [
+          "valuation"
+        ],
+        "summary": "Get dated current valuation or explicit unavailability",
+        "x-implementation-gate": "C02 and financial policy; not part of core CRUD delivery",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Valuation"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/portfolios/{portfolio_id}/contribution-previews": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/PortfolioId"
+        }
+      ],
+      "post": {
+        "operationId": "previewContribution",
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Calculate what to buy and quantity without executing a purchase",
+        "x-implementation-gate": "Feature 004, C02/C03, approved trading/fees/scoring policy and real data; no fake ready result",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContributionPreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ready scenario or explicit blocked calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionPreview"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "500": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Decimal": {
+        "type": "string",
+        "description": "Exact nonnegative decimal text; preserve accepted user-entered spelling. No exponent, grouping or binary float.",
+        "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+        "maxLength": 128
+      },
+      "PositiveDecimal": {
+        "type": "string",
+        "description": "Exact decimal greater than zero.",
+        "pattern": "^([1-9][0-9]*(\\.[0-9]+)?|0\\.[0-9]*[1-9][0-9]*)$",
+        "maxLength": 128
+      },
+      "SignedDecimal": {
+        "type": "string",
+        "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+        "maxLength": 128
+      },
+      "Currency": {
+        "type": "string",
+        "description": "ISO 4217 alphabetic currency code; actual supported currencies validated by backend.",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "Money": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/Decimal"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        }
+      },
+      "PositiveMoney": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/PositiveDecimal"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        }
+      },
+      "Reason": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "detail"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Stable machine code; UI localizes known codes and provides a generic localized fallback.",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "detail": {
+            "type": "string",
+            "description": "Sanitized explanation; no raw provider response or credential.",
+            "maxLength": 1000
+          }
+        }
+      },
+      "FieldError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pointer",
+          "code",
+          "detail"
+        ],
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "description": "JSON Pointer to invalid field."
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "RFC 9457 problem details with stable code and field pointers. Trace IDs never contain secrets.",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "request_id",
+          "errors"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "format": "uri-reference"
+          },
+          "code": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            }
+          }
+        }
+      },
+      "PortfolioCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "reporting_currency": {
+            "$ref": "#/components/schemas/Currency",
+            "default": "USD"
+          }
+        }
+      },
+      "PortfolioPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "reporting_currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        },
+        "minProperties": 1
+      },
+      "Portfolio": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "New portfolios have zero holdings and one zero cash balance in the initial reporting currency. A preview budget does not alter these balances. Changing reporting currency never rewrites stored original-currency entries.",
+        "required": [
+          "id",
+          "name",
+          "reporting_currency",
+          "revision",
+          "cash_balances",
+          "holding_count",
+          "targets_configured",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "reporting_currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cash_balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Money"
+            }
+          },
+          "holding_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "targets_configured": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PortfolioList": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Portfolio"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "InstrumentCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticker",
+          "exchange_mic",
+          "currency",
+          "kind"
+        ],
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "description": "Trim and normalize case in the backend.",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "exchange_mic": {
+            "type": "string",
+            "pattern": "^[A-Z0-9]{4}$"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "kind": {
+            "enum": [
+              "stock",
+              "etf"
+            ]
+          }
+        }
+      },
+      "Instrument": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Registration identifies an owned instrument; it does not discover investments or invent market prices. Normalized exchange/ticker identity is unique.",
+        "required": [
+          "id",
+          "ticker",
+          "exchange_mic",
+          "currency",
+          "kind",
+          "metadata_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ticker": {
+            "type": "string"
+          },
+          "exchange_mic": {
+            "type": "string",
+            "pattern": "^[A-Z0-9]{4}$"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "kind": {
+            "enum": [
+              "stock",
+              "etf"
+            ]
+          },
+          "metadata_status": {
+            "enum": [
+              "user_entered",
+              "verified"
+            ]
+          }
+        }
+      },
+      "HoldingWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Inventory snapshot, not a purchase. On create and full replacement, omitted cost/date become null; they are never inferred from a quote. The backend looks up instrument kind: stock inventory must be integral. Current order minimums must not invalidate already-existing inventory.",
+        "required": [
+          "instrument_id",
+          "quantity"
+        ],
+        "properties": {
+          "instrument_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/PositiveDecimal"
+          },
+          "original_cost": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Holding": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Exactly one current holding per portfolio and instrument; writes replace quantity rather than silently adding a purchase.",
+        "required": [
+          "instrument_id",
+          "quantity",
+          "original_cost",
+          "as_of_date",
+          "id",
+          "portfolio_id",
+          "instrument",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "instrument_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/PositiveDecimal"
+          },
+          "original_cost": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "portfolio_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instrument": {
+            "$ref": "#/components/schemas/Instrument"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "required": [
+                "instrument"
+              ],
+              "properties": {
+                "instrument": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "stock"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*(\\.0+)?$"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "HoldingList": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Holding"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "TargetNode": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Flat acyclic tree with implicit portfolio root (parent_id=null). Layer kinds may be skipped, not repeated/reversed on a path. Each nonempty sibling set sums exactly 100, including root children; leaf groups need no sum. Investment nodes are leaves and require instrument_id; other nodes require null.",
+        "required": [
+          "id",
+          "parent_id",
+          "kind",
+          "label",
+          "relative_weight",
+          "instrument_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "enum": [
+              "geography",
+              "asset_class",
+              "sector",
+              "investment"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "relative_weight": {
+            "$ref": "#/components/schemas/Decimal"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "investment"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "instrument_id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "instrument_id": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TargetsWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "nodes"
+        ],
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TargetNode"
+            }
+          }
+        }
+      },
+      "Targets": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "An empty allocation is a valid initial configuration. Replacing targets is atomic; invalid input preserves the old tree.",
+        "required": [
+          "revision",
+          "nodes"
+        ],
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TargetNode"
+            }
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "record_id",
+          "as_of",
+          "collected_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "record_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Quote": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "A ready calculation uses only a real, dated, policy-valid quote. Missing/stale data is represented by the unavailable branch, never by zero.",
+        "required": [
+          "instrument_id",
+          "unit_price",
+          "quantity_unit",
+          "quality",
+          "source"
+        ],
+        "properties": {
+          "instrument_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "unit_price": {
+            "$ref": "#/components/schemas/PositiveMoney"
+          },
+          "quantity_unit": {
+            "const": "share"
+          },
+          "quality": {
+            "const": "fresh"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          }
+        }
+      },
+      "FxRate": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One unit of base equals rate units of quote. Same-currency conversions need no fabricated provider quote.",
+        "required": [
+          "base_currency",
+          "quote_currency",
+          "rate",
+          "direction",
+          "quality",
+          "source"
+        ],
+        "properties": {
+          "base_currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "quote_currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "rate": {
+            "$ref": "#/components/schemas/PositiveDecimal"
+          },
+          "direction": {
+            "const": "quote_per_base"
+          },
+          "quality": {
+            "const": "fresh"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          }
+        }
+      },
+      "AllocationValue": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Current percentage and deviation are null when the invested-value denominator is zero. Cash is reported separately; the business policy for nonzero cash in allocation is not silently chosen here.",
+        "required": [
+          "node_id",
+          "current_percentage",
+          "target_percentage",
+          "deviation_percentage"
+        ],
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "current_percentage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target_percentage": {
+            "$ref": "#/components/schemas/Decimal"
+          },
+          "deviation_percentage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SignedDecimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "ValuationAvailable": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "invested_positions_value",
+          "allocations",
+          "snapshot"
+        ],
+        "properties": {
+          "status": {
+            "const": "available"
+          },
+          "invested_positions_value": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "allocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllocationValue"
+            }
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/MarketSnapshot"
+          }
+        }
+      },
+      "ValuationUnavailable": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "reasons"
+        ],
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reason"
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "Valuation": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ValuationAvailable"
+          },
+          {
+            "$ref": "#/components/schemas/ValuationUnavailable"
+          }
+        ],
+        "description": "Current valuation only. Historical cost/gain and policy for nonzero-cash percentages are separate; return unavailable if required policy or data is absent."
+      },
+      "ContributionPreviewRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "What-if new contribution amount, independent from the persisted starting cash of zero. This POST does not fund an account, change holdings, place orders or record actual purchases.",
+        "required": [
+          "budget"
+        ],
+        "properties": {
+          "budget": {
+            "$ref": "#/components/schemas/PositiveMoney"
+          }
+        }
+      },
+      "Recommendation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "instrument",
+          "quantity",
+          "unit_price",
+          "estimated_instrument_cost",
+          "estimated_budget_cost",
+          "reason_codes"
+        ],
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/Instrument"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/PositiveDecimal"
+          },
+          "unit_price": {
+            "$ref": "#/components/schemas/Quote"
+          },
+          "estimated_instrument_cost": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "estimated_budget_cost": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            },
+            "minItems": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "required": [
+                "instrument"
+              ],
+              "properties": {
+                "instrument": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "stock"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*(\\.0+)?$"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ContributionPreviewReady": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Original budget = allocated budget + remaining budget in the original budget currency using exact decimals. The sum of estimated_budget_cost equals allocated_budget. Only owned, eligible investments within hierarchy/caps may receive buys; stock quantity is integral and all quantities obey the product's verified minimum/increment policy. Empty recommendations with all budget left are valid when no permissible purchase fits.",
+        "required": [
+          "status",
+          "original_budget",
+          "allocated_budget",
+          "remaining_budget",
+          "recommendations",
+          "snapshot",
+          "warnings"
+        ],
+        "properties": {
+          "status": {
+            "const": "ready"
+          },
+          "original_budget": {
+            "$ref": "#/components/schemas/PositiveMoney"
+          },
+          "allocated_budget": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "remaining_budget": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            }
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/RecommendationSnapshot"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reason"
+            }
+          }
+        }
+      },
+      "ContributionPreviewBlocked": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "No estimated costs or quantities. Reasons include missing holdings/targets, stale/missing prices or FX, unresolved scoring/trading/fee policy. Never invent a recommendation to populate the UI.",
+        "required": [
+          "status",
+          "original_budget",
+          "reasons"
+        ],
+        "properties": {
+          "status": {
+            "const": "blocked"
+          },
+          "original_budget": {
+            "$ref": "#/components/schemas/PositiveMoney"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reason"
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "ContributionPreview": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ContributionPreviewReady"
+          },
+          {
+            "$ref": "#/components/schemas/ContributionPreviewBlocked"
+          }
+        ]
+      },
+      "MarketSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "created_at",
+          "portfolio_revision",
+          "targets_revision",
+          "calculation_version",
+          "fx_policy_version",
+          "quotes",
+          "fx_rates"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "portfolio_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "targets_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "calculation_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fx_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quotes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Quote"
+            }
+          },
+          "fx_rates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FxRate"
+            }
+          }
+        }
+      },
+      "RecommendationSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "created_at",
+          "portfolio_revision",
+          "targets_revision",
+          "calculation_version",
+          "allocation_policy_version",
+          "eligibility_policy_version",
+          "trading_policy_version",
+          "fees_policy_version",
+          "fx_policy_version",
+          "quotes",
+          "fx_rates"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "portfolio_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "targets_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "calculation_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "allocation_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "eligibility_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trading_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fees_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fx_policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quotes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Quote"
+            }
+          },
+          "fx_rates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FxRate"
+            }
+          }
+        }
+      },
+      "PortfolioCreated": {
+        "description": "Creation guarantees the owner's known-zero initial state.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Portfolio"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "holding_count": {
+                "const": 0
+              },
+              "targets_configured": {
+                "const": false
+              },
+              "cash_balances": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "const": "0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "PortfolioId": {
+        "name": "portfolio_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "HoldingId": {
+        "name": "holding_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "InstrumentId": {
+        "name": "instrument_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "IfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Strong portfolio ETag returned by GET. Missing gives 428; outdated gives 412; never silently overwrite concurrent edits."
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 50
+        }
+      },
+      "Cursor": {
+        "name": "cursor",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "description": "Opaque stable ordering cursor. Invalid cursor is 422."
+        }
+      }
+    },
+    "responses": {
+      "Problem": {
+        "description": "Structured request, concurrency, upstream or server error. Error responses never contain raw provider payloads.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      }
+    }
+  }
+}

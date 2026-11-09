@@ -10,13 +10,13 @@ Este documento registra o **plano aprovado**. O aceite do roadmap não libera au
 
 ## Estrutura encontrada
 
-| Área | Estado em 2026-11-03 | Implicação |
+| Área | Estado atualizado em 2026-11-07 | Implicação |
 |---|---|---|
-| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `tests` obrigatório. | Workflows de produto falham até existirem manifestos e testes executáveis; contratos e cards ainda pendentes |
+| Factory | Três repositórios públicos foram publicados em `ViniciusHass`; os submódulos usam URLs GitHub. A Factory protege `main`; backend/frontend protegem `main` e `develop` com PR e check `foundation` obrigatório. | Os quatro PRs de bootstrap foram integrados em `develop`; testes serão reativados com os primeiros testes reais. Contratos de produto ainda estão pendentes. |
 | Backend | Repositório irmão tem árvore inicial `src/` e `tests/`, um commit à frente do submódulo; sem `pyproject.toml`, migrações, modelos ou OpenAPI na inspeção | O scaffold pertence ao proprietário; contratos e ambiente executável ainda precisam ser acertados |
-| Frontend | Apenas README e instruções; sem React/Vite | Não iniciar implementação antes do aceite |
+| Frontend | F01 e F02 integrados em frontend `develop` pelos PRs #3/#4; shell, pt-BR/en e testes Chromium/axe estão presentes | F03 usa contratos versionados; main aguarda MVP e autorização |
 | Spec Kit | `specify` 1.3.0 inicializado com integração Codex e scripts PowerShell; constituição e specs originais preservadas | Clarificar specs, gerar planos e tarefas antes de promover cards a READY |
-| Contratos | Apenas README em `contracts/` | Tipos gerados e integração aguardam OpenAPI versionado |
+| Contratos | OpenAPI C01 versionado em `contracts/portfolio/v1/`, com schemas e fixtures verificados em 2026-11-08 | Implementação/export OpenAPI backend e integração real são cards distintos |
 
 ## Decisões do proprietário
 
@@ -157,7 +157,7 @@ Os códigos são provisórios. Após Spec Kit `clarify → plan → tasks → an
 - E2E: Playwright para cadastrar meta, posição, simular aporte e registrar realizado, quando APIs existirem.
 - Gates de PR: lint, typecheck, testes e build; E2E para fluxos integrados. Conferir bundle e dependências a cada milestone.
 
-GitHub Actions será introduzido quando houver manifests e scripts executáveis. Primeiro automatiza gates por PR em `develop`; após o teste manual do MVP pelo proprietário, revisamos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
+GitHub Actions tem o check obrigatório `foundation`. F01 adicionou o primeiro teste significativo e reativou `npm run test -- --run`: uma falha controlada bloqueou o PR #3, e a correção posterior passou por instalação, lint, typecheck, teste e build. No backend, o primeiro card com testes reais deverá reativar `uv run pytest tests` após o proprietário concluir o manifesto uv. Depois do teste manual do MVP, revisaremos juntos os testes de integração e os gates de promoção. O fluxo de branches e CI está no ADR 0003.
 
 O README do frontend deve ensinar o mapa de pastas, o caminho de uma requisição, como criar uma feature, como executar testes e como adicionar tradução. Componentes novos precisam de responsabilidade clara; evitar abstrações antes de haver uso concreto.
 
@@ -171,8 +171,16 @@ Commits futuros de backend/frontend serão atômicos, em branches GitFlow por ca
 4. Quais scorecards, gates e pesos por classe/setor? Dados insuficientes não são score zero.
 5. O realizado será registrado por compra individual. Ainda é preciso definir frações, taxas, impostos, dividendos e caixa residual.
 6. Quais horizonte e premissas de cenários? Não calcular retorno hipotético sem escolha explícita.
-7. Remotes, URLs dos submódulos e proteção de branches estão configurados. Os checks de CI são obrigatórios, mas não passam antes dos manifests e testes do backend/frontend.
+7. Remotes, URLs dos submódulos e proteção de branches estão configurados. O check `foundation` passa; testes de produto serão exigidos quando os primeiros testes reais forem implementados.
 
 ## Próximo passo
 
-Revisar este roadmap e o ADR com o proprietário. Aplicar Spec Kit 1.3.0 aos artefatos existentes sem sobrescrever a constituição: constituição → especificações → clarificações → planos → tarefas → análise. Converter tarefas aceitas em cards Factory e versionar contratos. Só então liberar F01 para Luna.
+F01 está concluído em frontend `develop`. Prosseguir com Spec Kit 1.3.0 nos contratos e specs pendentes, sem sobrescrever a constituição: especificações → clarificações → planos → tarefas → análise. Converter tarefas aceitas em cards Factory antes de liberar F02 e os recursos que consomem FastAPI.
+
+## Contrato C01 e entrada de aporte — 2026-11-08
+
+O proprietário confirmou o scaffold pronto e atribuiu a Sol o contrato técnico. O MVP começa com caixa zero e permite cadastrar posições existentes e informar quanto investir. O botão “Calcular investimento” retorna investimentos, quantidades, custos estimados e saldo, sem executar ou registrar compras. Ver [C01](../contracts/portfolio/v1/README.md). O proprietário definiu ações inteiras e frações somente nos produtos que as permitem, conforme mínimo/incremento verificados. A pergunta de negócio foi respondida; dados do produto não serão inventados. Endpoints ainda dependem de implementação backend, não da definição de contrato pelo proprietário.
+
+## Quantidades e persistência — 2026-11-08
+
+Ações têm quantidades inteiras; produtos fracionáveis seguem dados verificados de capacidade/mínimo/incremento. Campos decimais não autorizam frações por si só. O [planejamento do banco](database-design.md) e o [ADR0006](decisions/0006-product-quantity-rules.md) agora acompanham o contrato C01. Estado corrente, histórico e conversões são separados; preview não altera posições/caixa. Migrações backend e integração real permanecem cards próprios.

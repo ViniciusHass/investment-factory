@@ -1,0 +1,26 @@
+id: INV-0005
+title: Define C01 portfolio holdings and allocation API contract
+status: DONE
+repository: investment-factory
+spec: specs/001-portfolio-allocation/spec.md
+plan: specs/001-portfolio-allocation/plan.md
+tasks: specs/001-portfolio-allocation/tasks.md
+contract: contracts/portfolio/v1/openapi.json
+acceptance:
+  - Record owner business decisions and Sol technical contract ownership
+  - Preserve original decimal amount and currency with nullable unknown costs
+  - Validate optional hierarchy graphs and exact sibling totals
+  - Separate a ready recommendation from explicit blocked reasons without fabricated quantities
+  - Document concurrency errors pagination and idempotency
+  - Validate OpenAPI and synthetic cases and complete Spec Kit analysis
+test_commands:
+  - node contracts/portfolio/v1/validate.cjs
+  - git diff --check
+
+verified_on: 2026-11-08
+component_schemas: 36
+operations: 15
+fixture_cases: 42
+pull_request: https://github.com/ViniciusHass/investment-factory/pull/2
+
+contract_design_version: 0.2.0

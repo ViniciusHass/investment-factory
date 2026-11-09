@@ -62,8 +62,20 @@ Use GitHub Spec Kit for constitution → specify → clarify → plan → tasks 
 - What objective scorecards, exclusion rules and sector-specific thresholds should apply?
 - Is asset discovery of unowned investments part of MVP? Design should allow it, but scope not yet confirmed.
 - How should realized vs planned investments be captured, and what simulation horizon/return assumptions are acceptable?
-- How to handle partial shares, cash balances, taxes, fees, dividends, and rebalancing sales?
+- Stock quantities are integral; other product fractions follow verified product rules and initial cash is zero. Detailed cash movements, taxes, fees, dividends and rebalancing-sale policies remain separate work.
 - Which GitHub rulesets are enforceable on the owner's account? Which exact Codex models and automation features are available?
 
 ## 11. Working agreement
 Do not claim a phase is implemented until commands and tests have actually run. Keep user approval for merges and major design choices. First deliver the frontend plan, then delegate its implementation. Keep the Factory focused on coordinating product development, not becoming an unnecessary application platform.
+
+## 12. Owner clarification — 2026-11-08
+
+The owner confirms the initial backend scaffold is ready. Sol defines the technical API contract, endpoints, schemas, validation and implementation cards. The owner supplies business needs and reviews backend PRs. Do not ask the owner to design the API or repeat the resolved scaffold-readiness question; preserve the owner's structure in implementation diffs.
+
+The MVP begins with zero cash. The person can enter existing holdings and a new investment amount; the action must indicate which investments to buy and the quantity of each. A recommendation neither executes an order nor records an actual purchase. Quantity policy is confirmed: stocks require integral quantities; fractionable products such as CDB follow verified product unit/minimum/increment rules. Do not ask the same whole-versus-fractional question again. See [feature 001](specs/001-portfolio-allocation/spec.md), [feature 004](specs/004-rebalancing-engine/spec.md) and [C01 contract](contracts/portfolio/v1/README.md).
+
+## 13. Database plan and scheduled-run continuity — 2026-11-08
+
+The owner requested database planning as part of Sol's technical responsibility. See [database design](docs/database-design.md) and [ADR0006](docs/decisions/0006-product-quantity-rules.md). Contract v0.2.0 and 42 fixture cases are verified; no backend migrations were run.
+
+Do not assume an independent scheduled run inherits the complete earlier chat. The observed Nov4–7 runs created separate sessions/worktrees; this Nov8 session explicitly retrieved earlier session context. [Continuity notes](docs/automation-continuity.md) distinguish that observation from unverified scheduler configuration. Re-read current Git/card/PR state and recorded decisions on every run. While Factory PR2 remains open, inspect its latest `origin/docs/frontend-foundation-plan` documents rather than treat the main snapshot as the latest plan. Preserve other worktrees and uncommitted work. No schedule/destination setting was changed in this planning update.

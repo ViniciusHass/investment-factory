@@ -4,9 +4,9 @@
 
 **Created**: 2026-11-04
 
-**Status**: Draft; roadmap approved, feature card pending owner acceptance
+**Status**: Accepted for INV-0002 by the owner on 2026-11-06
 
-**Input**: The owner approved the long-term frontend roadmap and requested implementation only through reviewed cards, isolated branches, automated checks, and human-controlled merges.
+**Input**: The owner approved the long-term frontend roadmap and accepted INV-0002 on 2026-11-06. Implementation uses an isolated branch, automated checks, Sol review, and the agreed merge authority.
 
 ## User Scenarios & Testing
 
